@@ -16,6 +16,8 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { useToast } from "../ui/use-toast";
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -23,6 +25,7 @@ const formSchema = z.object({
 
 export const StoreModal = () => {
   const storeModal = useStoreModal();
+  const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
 
@@ -39,9 +42,20 @@ export const StoreModal = () => {
 
       const response = await axios.post("/api/stores", data);
 
-      console.log(response.data);
+      toast({
+        title: "Success",
+        description: "Store created",
+        variant: "default",
+      });
+
+      window.location.assign(`/${response.data.id}`);
     } catch (error) {
       console.log("[STORE_MODAL_ON_SUBMIT]", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
