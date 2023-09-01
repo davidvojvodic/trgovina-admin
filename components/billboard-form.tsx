@@ -71,7 +71,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       }
 
       router.refresh();
-
+      router.push(`/${params.storeId}/billboards`);
       toast({
         title: "Success",
         description: toastMessage,
