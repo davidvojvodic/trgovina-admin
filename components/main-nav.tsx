@@ -13,17 +13,22 @@ export function MainNav({
   const routes = [
     {
       href: `/${params.storeId}`,
-      label: "Home",
+      label: "Domov",
       active: pathname === `/${params.storeId}`,
     },
     {
       href: `/${params.storeId}/billboards`,
-      label: "Billboards",
+      label: "Oglasi",
       active: pathname === `/${params.storeId}/billboards`,
     },
     {
+      href: `/${params.storeId}/categories`,
+      label: "Kategorije",
+      active: pathname === `/${params.storeId}/categories`,
+    },
+    {
       href: `/${params.storeId}/settings`,
-      label: "Settings",
+      label: "Nastavitve",
       active: pathname === `/${params.storeId}/settings`,
     },
   ];

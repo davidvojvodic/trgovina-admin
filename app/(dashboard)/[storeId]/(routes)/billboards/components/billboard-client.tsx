@@ -1,14 +1,14 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import Heading from "./heading";
-import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
+import Heading from "../../../../../../components/heading";
+import { Button } from "../../../../../../components/ui/button";
+import { Separator } from "../../../../../../components/ui/separator";
 import { useParams, useRouter } from "next/navigation";
 
-import { BillboardColumn, columns } from "./columns";
-import { DataTable } from "./data-table";
-import { ApiList } from "./api-list";
+import { BillboardColumn, columns } from "./billboard-columns";
+import { DataTable } from "../../../../../../components/data-table";
+import { ApiList } from "../../../../../../components/api-list";
 
 interface BillboardClientProps {
   data: BillboardColumn[];
@@ -21,14 +21,14 @@ const BillboardClient = ({ data }: BillboardClientProps) => {
     <>
       <div className="flex items-center justify-between">
         <Heading
-          title={`Billboards (${data.length})`}
-          description="Manage billboards for your store"
+          title={`Oglasi (${data.length})`}
+          description="Upravljajte oglasne panoje za svojo trgovino"
         />
         <Button
           onClick={() => router.push(`/${params.storeId}/billboards/new`)}
         >
           <Plus className="mr-2 w-4 h-4" />
-          Add New
+          Dodaj nov
         </Button>
       </div>
       <Separator />

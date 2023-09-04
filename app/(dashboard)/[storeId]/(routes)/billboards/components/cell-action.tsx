@@ -1,20 +1,20 @@
 "use client";
 
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { BillboardColumn } from "./columns";
-import { Button } from "./ui/button";
+import { BillboardColumn } from "./billboard-columns";
+import { Button } from "../../../../../../components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { toast } from "./ui/use-toast";
+} from "../../../../../../components/ui/dropdown-menu";
+import { toast } from "../../../../../../components/ui/use-toast";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
-import AlertModal from "./modals/alert-modal";
+import AlertModal from "../../../../../../components/modals/alert-modal";
 
 interface CellActionProps {
   data: BillboardColumn;
@@ -30,8 +30,8 @@ export const CellAction = ({ data }: CellActionProps) => {
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast({
-      title: "Copied",
-      description: "Billboard ID copied to the clipboard.",
+      title: "Kopirano",
+      description: "Oglasni ID kopiran v odložišče.",
     });
   };
 
@@ -71,12 +71,12 @@ export const CellAction = ({ data }: CellActionProps) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">Odpri menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Dejanja</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() =>
               router.push(`/${params.storeId}/billboards/${data.id}`)
@@ -87,11 +87,11 @@ export const CellAction = ({ data }: CellActionProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onCopy(data.id)}>
             <Copy className="w-4 h-4 mr-2" />
-            Copy ID
+            Kopiraj ID
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
-            Delete
+            Izbriši
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
