@@ -77,7 +77,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
       }
 
       router.refresh();
-      router.push(`/${params.storeId}categories`);
+      router.push(`/${params.storeId}/categories`);
       toast({
         title: "Success",
         description: toastMessage,
