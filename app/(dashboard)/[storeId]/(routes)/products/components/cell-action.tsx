@@ -31,27 +31,26 @@ export const CellAction = ({ data }: CellActionProps) => {
     navigator.clipboard.writeText(id);
     toast({
       title: "Kopirano",
-      description: "Oglasni ID kopiran v odložišče.",
+      description: "Product ID kopiran v odložišče.",
     });
   };
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
+      await axios.delete(`/api/${params.storeId}/products/${data.id}`);
 
       router.refresh();
 
       toast({
         title: "Success",
-        description: "Billboard deleted",
+        description: "Product deleted",
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description:
-          "Make sure you removed all categories using this billboard first.",
+        description: "Something went wrong.",
         variant: "destructive",
       });
     } finally {
