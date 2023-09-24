@@ -1,4 +1,11 @@
-"use client";
+"use client"; // Notable import statement
+// Components and Actions:
+// 1. Import necessary modules and components
+// 2. Define the CellAction component
+//    - Takes data as a prop, representing billboard column data
+//    - Renders a dropdown menu with actions for each billboard
+
+// Import necessary modules and components
 
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { BillboardColumn } from "./billboard-columns";
@@ -16,10 +23,12 @@ import { useState } from "react";
 import axios from "axios";
 import AlertModal from "../../../../../../components/modals/alert-modal";
 
+// Define the props interface for the CellAction component
 interface CellActionProps {
   data: BillboardColumn;
 }
 
+// Define the CellAction component
 export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
@@ -27,6 +36,7 @@ export const CellAction = ({ data }: CellActionProps) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // Function to copy the billboard ID to the clipboard
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast({
@@ -35,6 +45,7 @@ export const CellAction = ({ data }: CellActionProps) => {
     });
   };
 
+  // Function to delete a billboard
   const onDelete = async () => {
     try {
       setLoading(true);
@@ -62,12 +73,14 @@ export const CellAction = ({ data }: CellActionProps) => {
 
   return (
     <>
+      {/* Render an alert modal for confirming the delete action */}
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
         loading={loading}
       />
+      {/* Render a dropdown menu with actions for the billboard */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -77,6 +90,7 @@ export const CellAction = ({ data }: CellActionProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Dejanja</DropdownMenuLabel>
+          {/* Option to update the billboard */}
           <DropdownMenuItem
             onClick={() =>
               router.push(`/${params.storeId}/billboards/${data.id}`)
@@ -85,10 +99,12 @@ export const CellAction = ({ data }: CellActionProps) => {
             <Edit className="w-4 h-4 mr-2" />
             Update
           </DropdownMenuItem>
+          {/* Option to copy the billboard ID */}
           <DropdownMenuItem onClick={() => onCopy(data.id)}>
             <Copy className="w-4 h-4 mr-2" />
             Kopiraj ID
           </DropdownMenuItem>
+          {/* Option to delete the billboard */}
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
             Izbriši

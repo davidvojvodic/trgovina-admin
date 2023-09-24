@@ -1,14 +1,14 @@
 "use client";
+/**
+ * @file CategoryForm.tsx
+ * @description This file defines a form component for creating or editing a category.
+ */
 
 import * as z from "zod";
-import { Billboard, Category, Store } from "@prisma/client";
-import Heading from "./heading";
-import { Button } from "./ui/button";
-import { Trash } from "lucide-react";
-import { Separator } from "./ui/separator";
+import axios from "axios";
+import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -18,11 +18,10 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { Separator } from "./ui/separator";
 import AlertModal from "./modals/alert-modal";
-import { ApiAlert } from "./api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "./image-upload";
 import {
@@ -32,38 +31,54 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { Billboard, Category } from "@prisma/client";
+import Heading from "./heading";
+import { Trash } from "lucide-react";
+import { useState } from "react";
 
+// Define the form schema using Zod
 const formSchema = z.object({
-  name: z.string().min(1),
-  billboardId: z.string().min(1),
+  name: z.string().min(1), // Category name is a required string with a minimum length of 1 character
+  billboardId: z.string().min(1), // Billboard ID is a required string with a minimum length of 1 character
 });
 
+// Define the type for category form values
 type CategoryFormValues = z.infer<typeof formSchema>;
 
+// Define props for the CategoryForm component
 interface CategoryFormProps {
-  initialData: Category | null;
-  billboards: Billboard[];
+  initialData: Category | null; // Initial category data (null for creating new category)
+  billboards: Billboard[]; // List of available billboards for selection
 }
 
+/**
+ * CategoryForm is a component that allows users to create or edit a category.
+ * It displays a form with fields for entering the category's name and selecting a billboard.
+ */
 const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
+  // Access the toast function, router, and origin
   const { toast } = useToast();
   const params = useParams();
   const router = useRouter();
   const origin = useOrigin();
 
+  // State variables for handling modal and loading states
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Determine whether the form is used for editing or creating a category
   const title = initialData ? "Edit category" : "Create category";
   const description = initialData ? "Edit a category" : "Add a new category";
   const toastMessage = initialData ? "Category updated." : "Category created.";
   const action = initialData ? "Save changes" : "Create";
 
+  // Initialize React Hook Form with the form schema and default values
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || { name: "", billboardId: "" },
   });
 
+  // Function to handle form submission
   const onSubmit = async (data: CategoryFormValues) => {
     try {
       setLoading(true);
@@ -76,25 +91,30 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
         await axios.post(`/api/${params.storeId}/categories`, data);
       }
 
+      // Refresh the router and navigate to the categories page
       router.refresh();
       router.push(`/${params.storeId}/categories`);
+      // Display a success toast message
       toast({
         title: "Success",
         description: toastMessage,
         variant: "default",
       });
     } catch (error) {
+      // Handle errors and display an error toast message
       toast({
         title: "Error",
         description: "Something went wrong",
         variant: "destructive",
       });
-      console.log("[SETTINGS_FORM_ON_SUBMIT]", error);
+      console.error("[SETTINGS_FORM_ON_SUBMIT]", error);
     } finally {
+      // Set loading back to false after the request is complete
       setLoading(false);
     }
   };
 
+  // Function to handle category deletion
   const onDelete = async () => {
     try {
       setLoading(true);
@@ -102,15 +122,18 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
         `/api/${params.storeId}/categories/${params.categoryId}`
       );
 
+      // Refresh the router and navigate to the categories page
       router.refresh();
       router.push(`/${params.storeId}/categories`);
 
+      // Display a success toast message
       toast({
         title: "Success",
         description: "Category deleted",
         variant: "default",
       });
     } catch (error) {
+      // Display an error toast message if deletion fails
       toast({
         title: "Error",
         description:
@@ -118,19 +141,23 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
         variant: "destructive",
       });
     } finally {
+      // Set loading back to false and close the modal
       setLoading(false);
       setOpen(false);
     }
   };
 
+  // Render the CategoryForm component with the form fields
   return (
     <>
+      {/* Alert modal for category deletion */}
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
         loading={loading}
       />
+      {/* Header with title and optional delete button */}
       <div className="flex items-center justify-between">
         <Heading title={title} description={description} />
         {initialData && (
@@ -144,13 +171,16 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
           </Button>
         )}
       </div>
+      {/* Separator */}
       <Separator />
+      {/* Form with fields for name and billboard selection */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
           <div className="grid grid-cols-3 gap-8">
+            {/* Category name field */}
             <FormField
               control={form.control}
               name="name"
@@ -168,6 +198,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                 </FormItem>
               )}
             />
+            {/* Billboard selection field */}
             <FormField
               control={form.control}
               name="billboardId"
@@ -189,6 +220,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      {/* Map through billboards and create select options */}
                       {billboards.map((billboard) => (
                         <SelectItem
                           key={billboard.id}
@@ -205,6 +237,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
               )}
             />
           </div>
+          {/* Submit button */}
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>

@@ -1,102 +1,110 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Define the Prisma generator for creating the Prisma Client.
 generator client {
   provider = "prisma-client-js"
 }
 
+// Define the Prisma datasource for your MySQL database.
 datasource db {
   provider     = "mysql"
-  url          = env("DATABASE_URL")
+  url          = env("DATABASE_URL") // The URL to your MySQL database
   relationMode = "prisma"
 }
 
+// Define the "Store" table/model.
 model Store {
-  id         String      @id @default(uuid())
-  name       String
-  userId     String
-  billboards Billboard[] @relation("StoreToBillboard")
-  categories Category[]  @relation("StoreToCategory")
-  sizes      Size[]      @relation("StoreToSize")
-  colors     Color[]     @relation("StoreToColor")
-  products   Product[]   @relation("StoreToProduct")
-  orders     Order[]     @relation("StoreToOrder")
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id         String      @id @default(uuid()) // Unique identifier for the store.
+  name       String // Name of the store.
+  userId     String // User ID associated with the store.
+  billboards Billboard[] @relation("StoreToBillboard") // Relationship to billboards.
+  categories Category[]  @relation("StoreToCategory") // Relationship to categories.
+  sizes      Size[]      @relation("StoreToSize") // Relationship to sizes.
+  colors     Color[]     @relation("StoreToColor") // Relationship to colors.
+  products   Product[]   @relation("StoreToProduct") // Relationship to products.
+  orders     Order[]     @relation("StoreToOrder") // Relationship to orders.
+  createdAt  DateTime    @default(now()) // Timestamp for when the store was created.
+  updatedAt  DateTime    @updatedAt // Timestamp for when the store was last updated.
 }
 
+// Define the "Billboard" table/model.
 model Billboard {
-  id         String     @id @default(uuid())
-  storeId    String
-  store      Store      @relation("StoreToBillboard", fields: [storeId], references: [id])
-  label      String
-  imageUrl   String
-  categories Category[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id         String     @id @default(uuid()) // Unique identifier for the billboard.
+  storeId    String // ID of the store associated with the billboard.
+  store      Store      @relation("StoreToBillboard", fields: [storeId], references: [id]) // Relationship to the store.
+  label      String // Label or name of the billboard.
+  imageUrl   String // URL of the billboard image.
+  categories Category[] // Relationship to categories.
+  createdAt  DateTime   @default(now()) // Timestamp for when the billboard was created.
+  updatedAt  DateTime   @updatedAt // Timestamp for when the billboard was last updated.
 
   @@index([storeId])
 }
 
+// Define the "Category" table/model.
 model Category {
-  id          String    @id @default(uuid())
-  storeId     String
-  store       Store     @relation("StoreToCategory", fields: [storeId], references: [id])
-  billboardId String
-  billboard   Billboard @relation(fields: [billboardId], references: [id])
-  products    Product[] @relation("CategoryToProduct")
-  name        String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id          String    @id @default(uuid()) // Unique identifier for the category.
+  storeId     String // ID of the store associated with the category.
+  store       Store     @relation("StoreToCategory", fields: [storeId], references: [id]) // Relationship to the store.
+  billboardId String // ID of the associated billboard.
+  billboard   Billboard @relation(fields: [billboardId], references: [id]) // Relationship to the billboard.
+  products    Product[] @relation("CategoryToProduct") // Relationship to products.
+  name        String // Name of the category.
+  createdAt   DateTime  @default(now()) // Timestamp for when the category was created.
+  updatedAt   DateTime  @updatedAt // Timestamp for when the category was last updated.
 
   @@index([storeId])
   @@index([billboardId])
 }
 
+// Define the "Size" table/model.
 model Size {
-  id        String    @id @default(uuid())
-  storeId   String
-  store     Store     @relation("StoreToSize", fields: [storeId], references: [id])
-  name      String
-  value     String
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        String    @id @default(uuid()) // Unique identifier for the size.
+  storeId   String // ID of the store associated with the size.
+  store     Store     @relation("StoreToSize", fields: [storeId], references: [id]) // Relationship to the store.
+  name      String // Name of the size.
+  value     String // Value associated with the size.
+  products  Product[] // Relationship to products.
+  createdAt DateTime  @default(now()) // Timestamp for when the size was created.
+  updatedAt DateTime  @updatedAt // Timestamp for when the size was last updated.
 
   @@index([storeId])
 }
 
+// Define the "Color" table/model.
 model Color {
-  id        String    @id @default(uuid())
-  storeId   String
-  store     Store     @relation("StoreToColor", fields: [storeId], references: [id])
-  name      String
-  value     String
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        String    @id @default(uuid()) // Unique identifier for the color.
+  storeId   String // ID of the store associated with the color.
+  store     Store     @relation("StoreToColor", fields: [storeId], references: [id]) // Relationship to the store.
+  name      String // Name of the color.
+  value     String // Value associated with the color.
+  products  Product[] // Relationship to products.
+  createdAt DateTime  @default(now()) // Timestamp for when the color was created.
+  updatedAt DateTime  @updatedAt // Timestamp for when the color was last updated.
 
   @@index([storeId])
 }
 
+// Define the "Product" table/model.
 model Product {
-  id         String      @id @default(uuid())
-  storeId    String
-  store      Store       @relation("StoreToProduct", fields: [storeId], references: [id])
-  categoryId String
-  category   Category    @relation("CategoryToProduct", fields: [categoryId], references: [id])
-  name       String
-  price      Decimal
-  isFeatured Boolean     @default(false)
-  isArchived Boolean     @default(false)
-  sizeId     String
-  size       Size        @relation(fields: [sizeId], references: [id])
-  colorId    String
-  color      Color       @relation(fields: [colorId], references: [id])
-  images     Image[]
-  orderItems OrderItem[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id         String      @id @default(uuid()) // Unique identifier for the product.
+  storeId    String // ID of the store associated with the product.
+  store      Store       @relation("StoreToProduct", fields: [storeId], references: [id]) // Relationship to the store.
+  categoryId String // ID of the associated category.
+  category   Category    @relation("CategoryToProduct", fields: [categoryId], references: [id]) // Relationship to the category.
+  name       String // Name of the product.
+  price      Decimal // Price of the product.
+  isFeatured Boolean     @default(false) // Flag indicating if the product is featured.
+  isArchived Boolean     @default(false) // Flag indicating if the product is archived.
+  sizeId     String // ID of the associated size.
+  size       Size        @relation(fields: [sizeId], references: [id]) // Relationship to the size.
+  colorId    String // ID of the associated color.
+  color      Color       @relation(fields: [colorId], references: [id]) // Relationship to the color.
+  images     Image[] // Relationship to product images.
+  orderItems OrderItem[] // Relationship to order items.
+  createdAt  DateTime    @default(now()) // Timestamp for when the product was created.
+  updatedAt  DateTime    @updatedAt // Timestamp for when the product was last updated.
 
   @@index([storeId])
   @@index([categoryId])
@@ -104,37 +112,40 @@ model Product {
   @@index([colorId])
 }
 
+// Define the "Image" table/model.
 model Image {
-  id        String   @id @default(uuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String   @id @default(uuid()) // Unique identifier for the image.
+  productId String // ID of the associated product.
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade) // Relationship to the product.
+  url       String // URL of the image.
+  createdAt DateTime @default(now()) // Timestamp for when the image was created.
+  updatedAt DateTime @updatedAt // Timestamp for when the image was last updated.
 
   @@index([productId])
 }
 
+// Define the "Order" table/model.
 model Order {
-  id         String      @id @default(uuid())
-  storeId    String
-  store      Store       @relation("StoreToOrder", fields: [storeId], references: [id])
-  orderItems OrderItem[]
-  isPaid     Boolean     @default(false)
-  phone      String      @default("")
-  address    String      @default("")
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id         String      @id @default(uuid()) // Unique identifier for the order.
+  storeId    String // ID of the store associated with the order.
+  store      Store       @relation("StoreToOrder", fields: [storeId], references: [id]) // Relationship to the store.
+  orderItems OrderItem[] // Relationship to order items.
+  isPaid     Boolean     @default(false) // Flag indicating if the order is paid.
+  phone      String      @default("") // Phone number associated with the order.
+  address    String      @default("") // Address associated with the order.
+  createdAt  DateTime    @default(now()) // Timestamp for when the order was created.
+  updatedAt  DateTime    @updatedAt // Timestamp for when the order was last updated.
 
   @@index([storeId])
 }
 
+// Define the "OrderItem" table/model.
 model OrderItem {
-  id        String  @id @default(uuid())
-  orderId   String
-  order     Order   @relation(fields: [orderId], references: [id])
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
+  id        String  @id @default(uuid()) // Unique identifier for the order item.
+  orderId   String // ID of the associated order.
+  order     Order   @relation(fields: [orderId], references: [id]) // Relationship to the order.
+  productId String // ID of the associated product.
+  product   Product @relation(fields: [productId], references: [id]) // Relationship to the product.
 
   @@index([orderId])
   @@index([productId])

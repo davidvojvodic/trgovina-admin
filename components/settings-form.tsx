@@ -25,15 +25,16 @@ import AlertModal from "./modals/alert-modal";
 import { ApiAlert } from "./api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 
-interface SettingsFormProps {
-  initialData: Store;
-}
-
+// Define the schema for form validation using Zod.
 const formSchema = z.object({
   name: z.string().min(1),
 });
 
 type SettingsFormValues = z.infer<typeof formSchema>;
+
+interface SettingsFormProps {
+  initialData: Store;
+}
 
 const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const { toast } = useToast();
@@ -44,25 +45,31 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Initialize the form with React Hook Form and Zod resolver.
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData,
   });
 
+  // Function to handle form submission.
   const onSubmit = async (data: SettingsFormValues) => {
     try {
       setLoading(true);
 
+      // Send a PATCH request to update store settings.
       await axios.patch(`/api/stores/${params.storeId}`, data);
 
+      // Refresh the page.
       router.refresh();
 
+      // Show a success toast message.
       toast({
         title: "Success",
         description: "Store updated",
         variant: "default",
       });
     } catch (error) {
+      // Show an error toast message.
       toast({
         title: "Error",
         description: "Something went wrong",
@@ -74,20 +81,25 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
     }
   };
 
+  // Function to handle store deletion.
   const onDelete = async () => {
     try {
       setLoading(true);
+      // Send a DELETE request to delete the store.
       await axios.delete(`/api/stores/${params.storeId}`);
 
+      // Refresh and navigate to the homepage.
       router.refresh();
       router.push("/");
 
+      // Show a success toast message.
       toast({
         title: "Success",
         description: "Store deleted",
         variant: "default",
       });
     } catch (error) {
+      // Show an error toast message if deletion fails.
       toast({
         title: "Error",
         description: "Make sure you removed all products and categories first.",
@@ -101,6 +113,7 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
 
   return (
     <>
+      {/* Alert modal for confirming store deletion */}
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -108,7 +121,9 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
         loading={loading}
       />
       <div className="flex items-center justify-between">
+        {/* Heading for the settings form */}
         <Heading title="Settings" description="Manage store preferences" />
+        {/* Delete button for store */}
         <Button
           disabled={loading}
           variant="destructive"
@@ -118,13 +133,16 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
           <Trash className="h-4 w-4" />
         </Button>
       </div>
+      {/* Separator */}
       <Separator />
+      {/* Settings form */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
           <div className="grid grid-cols-3 gap-8">
+            {/* Store name field */}
             <FormField
               control={form.control}
               name="name"
@@ -143,12 +161,15 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
               )}
             />
           </div>
+          {/* Save changes button */}
           <Button disabled={loading} className="ml-auto" type="submit">
             Save changes
           </Button>
         </form>
       </Form>
+      {/* Separator */}
       <Separator />
+      {/* Display the API URL */}
       <ApiAlert
         title="NEXT_PUBLIC_API_URL"
         description={`${origin}/api/${params.storeId}`}

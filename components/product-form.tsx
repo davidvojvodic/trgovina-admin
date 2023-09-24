@@ -35,6 +35,7 @@ import {
 } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
 
+// Define a schema using Zod for form validation.
 const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
@@ -74,6 +75,7 @@ const ProductForm = ({
   const toastMessage = initialData ? "Product updated." : "Product created.";
   const action = initialData ? "Save changes" : "Create";
 
+  // Initialize React Hook Form with a resolver for Zod schema validation.
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData
@@ -93,18 +95,22 @@ const ProductForm = ({
         },
   });
 
+  // Function to handle form submission.
   const onSubmit = async (data: ProductFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
+        // Update an existing product.
         await axios.patch(
           `/api/${params.storeId}/products/${params.productId}`,
           data
         );
       } else {
+        // Create a new product.
         await axios.post(`/api/${params.storeId}/products`, data);
       }
 
+      // Refresh and navigate to the products page.
       router.refresh();
       router.push(`/${params.storeId}/products`);
       toast({
@@ -124,11 +130,14 @@ const ProductForm = ({
     }
   };
 
+  // Function to handle product deletion.
   const onDelete = async () => {
     try {
       setLoading(true);
+      // Delete the product.
       await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
 
+      // Refresh and navigate to the products page.
       router.refresh();
       router.push(`/${params.storeId}/products`);
 
@@ -151,6 +160,7 @@ const ProductForm = ({
 
   return (
     <>
+      {/* Alert modal for confirming product deletion */}
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -158,8 +168,10 @@ const ProductForm = ({
         loading={loading}
       />
       <div className="flex items-center justify-between">
+        {/* Heading for the product form */}
         <Heading title={title} description={description} />
         {initialData && (
+          // Delete button for existing products
           <Button
             disabled={loading}
             variant="destructive"
@@ -170,12 +182,15 @@ const ProductForm = ({
           </Button>
         )}
       </div>
+      {/* Separator */}
       <Separator />
+      {/* Product form */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
+          {/* Image upload field */}
           <FormField
             control={form.control}
             name="images"
@@ -183,6 +198,7 @@ const ProductForm = ({
               <FormItem>
                 <FormLabel>Images</FormLabel>
                 <FormControl>
+                  {/* ImageUpload component for handling images */}
                   <ImageUpload
                     value={field.value.map((image) => image.url)}
                     disabled={loading}
@@ -200,7 +216,9 @@ const ProductForm = ({
               </FormItem>
             )}
           />
+          {/* Grid layout for other form fields */}
           <div className="grid grid-cols-3 gap-8">
+            {/* Product name field */}
             <FormField
               control={form.control}
               name="name"
@@ -218,6 +236,7 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+            {/* Product price field */}
             <FormField
               control={form.control}
               name="price"
@@ -236,6 +255,7 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+            {/* Product category field */}
             <FormField
               control={form.control}
               name="categoryId"
@@ -257,6 +277,7 @@ const ProductForm = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      {/* Select category options */}
                       {categories.map((category) => (
                         <SelectItem
                           key={category.id}
@@ -272,6 +293,7 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+            {/* Product size field */}
             <FormField
               control={form.control}
               name="sizeId"
@@ -293,6 +315,7 @@ const ProductForm = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      {/* Select size options */}
                       {sizes.map((size) => (
                         <SelectItem
                           key={size.id}
@@ -308,6 +331,7 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+            {/* Product color field */}
             <FormField
               control={form.control}
               name="colorId"
@@ -329,6 +353,7 @@ const ProductForm = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      {/* Select color options */}
                       {colors.map((color) => (
                         <SelectItem
                           key={color.id}
@@ -344,6 +369,7 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+            {/* Featured and Archived fields */}
             <FormField
               control={form.control}
               name="isFeatured"
@@ -385,6 +411,7 @@ const ProductForm = ({
               )}
             />
           </div>
+          {/* Submit button */}
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>

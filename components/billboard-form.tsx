@@ -1,4 +1,11 @@
-"use client";
+"use client"; // Notable import statement
+// Components and Actions:
+// 1. Import necessary modules and components
+// 2. Define the BillboardForm component for creating or editing billboards
+//    - Uses zod for form validation and react-hook-form for form handling
+//    - Handles form submission, deletion, and image upload
+
+// Import necessary modules and components
 
 import * as z from "zod";
 import { Billboard, Store } from "@prisma/client";
@@ -26,6 +33,7 @@ import { ApiAlert } from "./api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "./image-upload";
 
+// Define the form schema for billboard data validation
 const formSchema = z.object({
   label: z.string().min(1),
   imageUrl: z.string().min(1),
@@ -33,19 +41,24 @@ const formSchema = z.object({
 
 type BillboardFormValues = z.infer<typeof formSchema>;
 
+// Define the BillboardFormProps interface
 interface BillboardFormProps {
   initialData: Billboard | null;
 }
 
+// Define the BillboardForm component for creating or editing billboards
 const BillboardForm = ({ initialData }: BillboardFormProps) => {
+  // Initialize form handling and toast notifications
   const { toast } = useToast();
   const params = useParams();
   const router = useRouter();
   const origin = useOrigin();
 
+  // State variables for modal and loading state
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Determine form title, description, action button text, and toast message
   const title = initialData ? "Edit billboard" : "Create billboard";
   const description = initialData ? "Edit a billboard" : "Add a new billboard";
   const toastMessage = initialData
@@ -53,11 +66,13 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
     : "Billboard created.";
   const action = initialData ? "Save changes" : "Create";
 
+  // Initialize react-hook-form with the form schema and initial values
   const form = useForm<BillboardFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || { label: "", imageUrl: "" },
   });
 
+  // Handle form submission
   const onSubmit = async (data: BillboardFormValues) => {
     try {
       setLoading(true);
@@ -89,6 +104,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
     }
   };
 
+  // Handle billboard deletion
   const onDelete = async () => {
     try {
       setLoading(true);
@@ -119,6 +135,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
   return (
     <>
+      {/* Alert modal for confirming deletion */}
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -126,6 +143,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
         loading={loading}
       />
       <div className="flex items-center justify-between">
+        {/* Form title and delete button (if editing) */}
         <Heading title={title} description={description} />
         {initialData && (
           <Button
@@ -138,12 +156,15 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           </Button>
         )}
       </div>
+      {/* Form separator */}
       <Separator />
+      {/* Billboard form */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
+          {/* Form field for uploading an image */}
           <FormField
             control={form.control}
             name="imageUrl"
@@ -162,6 +183,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
               </FormItem>
             )}
           />
+          {/* Grid for label input */}
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -181,6 +203,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
               )}
             />
           </div>
+          {/* Submit button */}
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
           </Button>

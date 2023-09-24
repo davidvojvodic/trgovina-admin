@@ -1,7 +1,8 @@
 "use client";
-
+// Import necessary modules and components
 import { ColumnDef } from "@tanstack/react-table";
 
+// Define the OrderColumn type
 export type OrderColumn = {
   id: string;
   phone: string;
@@ -12,25 +13,26 @@ export type OrderColumn = {
   createdAt: string;
 };
 
+// Define the columns for the DataTable
 export const columns: ColumnDef<OrderColumn>[] = [
   {
-    accessorKey: "products",
-    header: "Products",
+    accessorKey: "products", // Column accessor key for products
+    header: "Products", // Column header text
   },
   {
-    accessorKey: "phone",
-    header: "Phone",
+    accessorKey: "phone", // Column accessor key for phone
+    header: "Phone", // Column header text
   },
   {
-    accessorKey: "address",
-    header: "Address",
+    accessorKey: "address", // Column accessor key for address
+    header: "Address", // Column header text
   },
   {
-    accessorKey: "totalPrice",
-    header: "Total price",
+    accessorKey: "totalPrice", // Column accessor key for total price
+    header: "Total price", // Column header text
   },
   {
-    accessorKey: "isPaid",
-    header: "Paid",
+    accessorKey: "isPaid", // Column accessor key for isPaid
+    header: "Paid", // Column header text
   },
 ];

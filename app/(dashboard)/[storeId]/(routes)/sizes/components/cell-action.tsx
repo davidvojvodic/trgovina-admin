@@ -1,7 +1,19 @@
 "use client";
+/**
+ * @file CellAction.tsx
+ * @description This component represents the actions that can be performed on a size item in a table.
+ * It provides options to edit, copy the ID, and delete a size item.
+ *
+ * Functionality:
+ * 1. Define the CellAction component that displays actions for a size item.
+ * 2. Use Lucide React icons for edit, copy, and delete actions.
+ * 3. Handle copy action by copying the size ID to the clipboard.
+ * 4. Handle delete action by sending a request to delete the size item.
+ * 5. Display a confirmation modal before deleting the size item.
+ */
 
+// Import necessary modules and components
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-
 import { Button } from "../../../../../../components/ui/button";
 import {
   DropdownMenu,
@@ -17,10 +29,17 @@ import axios from "axios";
 import AlertModal from "../../../../../../components/modals/alert-modal";
 import { SizeColumn } from "./columns";
 
+/**
+ * Props for the CellAction component.
+ */
 interface CellActionProps {
-  data: SizeColumn;
+  data: SizeColumn; // The size item data to perform actions on.
 }
 
+/**
+ * CellAction component
+ * @param {CellActionProps} props - The component's props.
+ */
 export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
@@ -28,6 +47,10 @@ export const CellAction = ({ data }: CellActionProps) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
+  /**
+   * Handles the copy action by copying the size ID to the clipboard.
+   * @param {string} id - The ID to be copied.
+   */
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast({
@@ -36,6 +59,9 @@ export const CellAction = ({ data }: CellActionProps) => {
     });
   };
 
+  /**
+   * Handles the delete action by sending a request to delete the size item.
+   */
   const onDelete = async () => {
     try {
       setLoading(true);

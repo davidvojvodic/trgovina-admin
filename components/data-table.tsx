@@ -1,8 +1,6 @@
 "use client";
 
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-
+import { useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -12,7 +10,6 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -21,20 +18,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
+// Define the props for the DataTable component
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  searchKey: string;
+  columns: ColumnDef<TData, TValue>[]; // Configuration of table columns
+  data: TData[]; // Table data
+  searchKey: string; // Key for searching/filtering
 }
 
+// DataTable is a custom table component with filtering and pagination
 export function DataTable<TData, TValue>({
   columns,
   data,
   searchKey,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  // Initialize the table using useReactTable
   const table = useReactTable({
     data,
     columns,
@@ -62,6 +64,7 @@ export function DataTable<TData, TValue>({
       <div className="rounded-md border">
         <Table>
           <TableHeader>
+            {/* Render table header */}
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -80,6 +83,7 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
+            {/* Render table rows */}
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -110,6 +114,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
+        {/* Pagination buttons */}
         <Button
           variant="outline"
           size="sm"

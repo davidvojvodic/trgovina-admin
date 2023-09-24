@@ -1,8 +1,15 @@
-"use client";
+"use client"; // Notable import statement
+// Components and Actions:
+// 1. Import necessary modules and components
+// 2. Define the ColorColumn type to represent color data
+// 3. Define the columns configuration for displaying color data in a table
+
+// Import necessary modules and components
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 
+// Define the ColorColumn type to represent color data
 export type ColorColumn = {
   id: string;
   name: string;
@@ -10,14 +17,15 @@ export type ColorColumn = {
   createdAt: string;
 };
 
+// Define the columns configuration for displaying color data in a table
 export const columns: ColumnDef<ColorColumn>[] = [
   {
     accessorKey: "name",
-    header: "Ime",
+    header: "Ime", // Column header for color names
   },
   {
     accessorKey: "value",
-    header: "Value",
+    header: "Value", // Column header for color values
     cell: ({ row }) => (
       <div className="flex items-center gap-x-2">
         {row.original.value}
@@ -30,10 +38,10 @@ export const columns: ColumnDef<ColorColumn>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Date",
+    header: "Date", // Column header for creation dates
   },
   {
     id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
+    cell: ({ row }) => <CellAction data={row.original} />, // Cell action for color management
   },
 ];

@@ -1,7 +1,12 @@
 "use client";
 
+/**
+ * @file ColorForm.tsx
+ * @description This file defines a form component for creating or editing colors.
+ */
+
 import * as z from "zod";
-import { Billboard, Color, Size, Store } from "@prisma/client";
+import { Color } from "@prisma/client";
 import Heading from "./heading";
 import { Button } from "./ui/button";
 import { Trash } from "lucide-react";
@@ -22,10 +27,9 @@ import { useToast } from "./ui/use-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import AlertModal from "./modals/alert-modal";
-import { ApiAlert } from "./api-alert";
 import { useOrigin } from "@/hooks/use-origin";
-import ImageUpload from "./image-upload";
 
+// Define the form schema for ColorForm validation
 const formSchema = z.object({
   name: z.string().min(1),
   value: z.string().min(4).regex(/^#/, {
@@ -35,10 +39,15 @@ const formSchema = z.object({
 
 type ColorFormValues = z.infer<typeof formSchema>;
 
+// Define props for the ColorForm component
 interface ColorFormProps {
-  initialData: Color | null;
+  initialData: Color | null; // Initial color data for editing (null for creating)
 }
 
+/**
+ * ColorForm is a form component for creating or editing colors.
+ * It includes fields for color name and value and supports validation and submission.
+ */
 const ColorForm = ({ initialData }: ColorFormProps) => {
   const { toast } = useToast();
   const params = useParams();
@@ -48,16 +57,19 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Determine the title, description, toast message, and action based on whether it's for editing or creating a color
   const title = initialData ? "Edit color" : "Create color";
   const description = initialData ? "Edit a color" : "Add a new color";
   const toastMessage = initialData ? "Color updated." : "Color created.";
   const action = initialData ? "Save changes" : "Create";
 
+  // Initialize the form with react-hook-form
   const form = useForm<ColorFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || { name: "", value: "" },
   });
 
+  // Function to handle form submission
   const onSubmit = async (data: ColorFormValues) => {
     try {
       setLoading(true);
@@ -89,6 +101,7 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
     }
   };
 
+  // Function to handle color deletion
   const onDelete = async () => {
     try {
       setLoading(true);
@@ -115,6 +128,7 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
     }
   };
 
+  // Render the ColorForm component
   return (
     <>
       <AlertModal

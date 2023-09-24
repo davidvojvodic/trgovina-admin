@@ -1,25 +1,33 @@
-"use client";
+"use client"; // Notable import statement
+// Components and Actions:
+// 1. Import necessary modules and components
+// 2. Define the BillboardColumn type representing billboard data
+// 3. Define an array of columns for displaying billboard data
+
+// Import necessary modules and components
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 
+// Define the type for BillboardColumn representing billboard data
 export type BillboardColumn = {
   id: string;
   label: string;
   createdAt: string;
 };
 
+// Define an array of columns for displaying billboard data
 export const columns: ColumnDef<BillboardColumn>[] = [
   {
-    accessorKey: "label",
-    header: "Oznaka",
+    accessorKey: "label", // Key for accessing the label property
+    header: "Oznaka", // Header text for the "Oznaka" column
   },
   {
-    accessorKey: "createdAt",
-    header: "Datum",
+    accessorKey: "createdAt", // Key for accessing the createdAt property
+    header: "Datum", // Header text for the "Datum" column
   },
   {
-    id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
+    id: "actions", // Unique ID for the actions column
+    cell: ({ row }) => <CellAction data={row.original} />, // Render cell actions using the CellAction component
   },
 ];

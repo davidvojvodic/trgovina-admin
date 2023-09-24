@@ -23,14 +23,17 @@ import {
   CommandSeparator,
 } from "./ui/command";
 
+// Define the props for the popover trigger component.
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
+// Define the props for the StoreSwitcher component.
 interface StoreSwitcherProps extends PopoverTriggerProps {
   items: Store[];
 }
 
+// Define the StoreSwitcher component function.
 export default function StoreSwitcher({
   className,
   items = [],
@@ -39,17 +42,20 @@ export default function StoreSwitcher({
   const params = useParams();
   const router = useRouter();
 
+  // Format store items for display in the popover.
   const formattedItems = items.map((item) => ({
     label: item.name,
     value: item.id,
   }));
 
+  // Determine the currently selected store.
   const selectedStore = formattedItems.find(
     (item) => item.value === params.storeId
   );
 
   const [open, setOpen] = useState(false);
 
+  // Function to handle store selection.
   const onStoreSelect = (store: { value: string; label: string }) => {
     setOpen(false);
     router.push(`/${store.value}`);
@@ -72,6 +78,7 @@ export default function StoreSwitcher({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
+        {/* Popover content for store selection */}
         <Command>
           <CommandList>
             <CommandInput placeholder="Poišči trgovino..." />
@@ -100,6 +107,7 @@ export default function StoreSwitcher({
           <CommandSeparator />
           <CommandList>
             <CommandGroup>
+              {/* Button to create a new store */}
               <CommandItem
                 onSelect={() => {
                   setOpen(false);

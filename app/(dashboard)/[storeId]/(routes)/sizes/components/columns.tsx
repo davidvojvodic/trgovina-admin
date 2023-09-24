@@ -1,30 +1,41 @@
 "use client";
+/**
+ * @file SizeColumns.tsx
+ * @description This file defines the columns and column definitions for displaying sizes in a table.
+ */
 
+// Import necessary modules and components
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 
+/**
+ * Type definition for a SizeColumn representing the properties of a size.
+ */
 export type SizeColumn = {
-  id: string;
-  name: string;
-  value: string;
-  createdAt: string;
+  id: string; // The unique identifier for the size.
+  name: string; // The name of the size.
+  value: string; // The value of the size.
+  createdAt: string; // The date when the size was created.
 };
 
+/**
+ * An array of column definitions for displaying size data in a table.
+ */
 export const columns: ColumnDef<SizeColumn>[] = [
   {
-    accessorKey: "name",
-    header: "Ime",
+    accessorKey: "name", // Define the accessor key for the name property.
+    header: "Ime", // Set the column header text to "Ime".
   },
   {
-    accessorKey: "value",
-    header: "Value",
+    accessorKey: "value", // Define the accessor key for the value property.
+    header: "Value", // Set the column header text to "Value".
   },
   {
-    accessorKey: "createdAt",
-    header: "Date",
+    accessorKey: "createdAt", // Define the accessor key for the createdAt property.
+    header: "Date", // Set the column header text to "Date".
   },
   {
-    id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
+    id: "actions", // Define a unique identifier for the actions column.
+    cell: ({ row }) => <CellAction data={row.original} />, // Render actions using the CellAction component.
   },
 ];
