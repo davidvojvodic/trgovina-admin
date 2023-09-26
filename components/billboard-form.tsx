@@ -59,12 +59,14 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
   const [loading, setLoading] = useState(false);
 
   // Determine form title, description, action button text, and toast message
-  const title = initialData ? "Edit billboard" : "Create billboard";
-  const description = initialData ? "Edit a billboard" : "Add a new billboard";
+  const title = initialData ? "Uredi oglasni pano" : "Ustvari oglasni pano";
+  const description = initialData
+    ? "Urejaj oglasni pano"
+    : "Dodaj nov oglasni pano";
   const toastMessage = initialData
-    ? "Billboard updated."
-    : "Billboard created.";
-  const action = initialData ? "Save changes" : "Create";
+    ? "Oglasni pano posodobljen."
+    : "Oglasni pano ustvarjen.";
+  const action = initialData ? "Shrani spremembe" : "Ustvari";
 
   // Initialize react-hook-form with the form schema and initial values
   const form = useForm<BillboardFormValues>({
@@ -88,14 +90,14 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       router.refresh();
       router.push(`/${params.storeId}/billboards`);
       toast({
-        title: "Success",
+        title: "Uspešno",
         description: toastMessage,
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: "Nekaj je šlo narobe",
         variant: "destructive",
       });
       console.log("[SETTINGS_FORM_ON_SUBMIT]", error);
@@ -116,15 +118,15 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       router.push(`/${params.storeId}/billboards`);
 
       toast({
-        title: "Success",
-        description: "Billboard deleted",
+        title: "Uspešno",
+        description: "Oglasni pano je izbrisan.",
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "Make sure you removed all categories using this billboard first.",
+          "Prepričajte se, da ste najprej odstranili vse kategorije, ki uporabljajo ta pano.",
         variant: "destructive",
       });
     } finally {
@@ -170,7 +172,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
             name="imageUrl"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Background image</FormLabel>
+                <FormLabel>Slika ozadja</FormLabel>
                 <FormControl>
                   <ImageUpload
                     value={field.value ? [field.value] : []}
@@ -190,11 +192,11 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
               name="label"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>Oznaka</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Billboard label"
+                      placeholder="Oznaka oglasnega panoja"
                       {...field}
                     />
                   </FormControl>

@@ -25,7 +25,7 @@ export const columns: ColumnDef<ColorColumn>[] = [
   },
   {
     accessorKey: "value",
-    header: "Value", // Column header for color values
+    header: "Vrednost", // Column header for color values
     cell: ({ row }) => (
       <div className="flex items-center gap-x-2">
         {row.original.value}
@@ -38,7 +38,7 @@ export const columns: ColumnDef<ColorColumn>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Date", // Column header for creation dates
+    header: "Datum", // Column header for creation dates
   },
   {
     id: "actions",

@@ -41,8 +41,8 @@ export const CellAction = ({ data }: CellActionProps) => {
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast({
-      title: "Copied",
-      description: "Color ID copied to the clipboard.",
+      title: "Kopirano",
+      description: "ID barve kopiran v odložišče.",
     });
   };
 
@@ -55,15 +55,15 @@ export const CellAction = ({ data }: CellActionProps) => {
       router.refresh();
 
       toast({
-        title: "Success",
-        description: "Color deleted",
+        title: "Uspešno",
+        description: "Barva izbrisana",
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "Make sure you removed all products using this color first.",
+          "Prepričajte se, da ste najprej odstranili vse izdelke, ki uporabljajo to barvo.",
         variant: "destructive",
       });
     } finally {
@@ -85,12 +85,12 @@ export const CellAction = ({ data }: CellActionProps) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">Odpri menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Dejanja</DropdownMenuLabel>
           {/* Option to update the color */}
           <DropdownMenuItem
             onClick={() => router.push(`/${params.storeId}/colors/${data.id}`)}
@@ -101,12 +101,12 @@ export const CellAction = ({ data }: CellActionProps) => {
           {/* Option to copy the color ID */}
           <DropdownMenuItem onClick={() => onCopy(data.id)}>
             <Copy className="w-4 h-4 mr-2" />
-            Copy ID
+            Kopiraj ID
           </DropdownMenuItem>
           {/* Option to delete the color */}
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
-            Delete
+            Izbriši
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

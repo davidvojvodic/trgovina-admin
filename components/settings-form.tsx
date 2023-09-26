@@ -64,15 +64,15 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
 
       // Show a success toast message.
       toast({
-        title: "Success",
-        description: "Store updated",
+        title: "Uspešno",
+        description: "Trgovina posodobljena",
         variant: "default",
       });
     } catch (error) {
       // Show an error toast message.
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: "Nekaj je šlo narobe",
         variant: "destructive",
       });
       console.log("[SETTINGS_FORM_ON_SUBMIT]", error);
@@ -94,15 +94,16 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
 
       // Show a success toast message.
       toast({
-        title: "Success",
-        description: "Store deleted",
+        title: "Uspešno",
+        description: "Trgovina je izbrisana",
         variant: "default",
       });
     } catch (error) {
       // Show an error toast message if deletion fails.
       toast({
         title: "Error",
-        description: "Make sure you removed all products and categories first.",
+        description:
+          "Prepričajte se, da ste najprej odstranili vse izdelke in kategorije.",
         variant: "destructive",
       });
     } finally {
@@ -122,7 +123,10 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
       />
       <div className="flex items-center justify-between">
         {/* Heading for the settings form */}
-        <Heading title="Settings" description="Manage store preferences" />
+        <Heading
+          title="Nastavitve"
+          description="Upravljajte nastavitve trgovine"
+        />
         {/* Delete button for store */}
         <Button
           disabled={loading}
@@ -148,11 +152,11 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Ime trgovine</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Store name"
+                      placeholder="Ime trgovine"
                       {...field}
                     />
                   </FormControl>
@@ -163,7 +167,7 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
           </div>
           {/* Save changes button */}
           <Button disabled={loading} className="ml-auto" type="submit">
-            Save changes
+            Shrani spremembe
           </Button>
         </form>
       </Form>

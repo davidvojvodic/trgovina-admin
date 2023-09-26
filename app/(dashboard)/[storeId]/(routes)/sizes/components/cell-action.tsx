@@ -55,7 +55,7 @@ export const CellAction = ({ data }: CellActionProps) => {
     navigator.clipboard.writeText(id);
     toast({
       title: "Kopirano",
-      description: "Size ID kopiran v odložišče.",
+      description: "ID velikosti kopiran v odložišče.",
     });
   };
 
@@ -70,15 +70,15 @@ export const CellAction = ({ data }: CellActionProps) => {
       router.refresh();
 
       toast({
-        title: "Success",
-        description: "Size deleted",
+        title: "Uspešno",
+        description: "Velikost je izbrisana",
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "Make sure you removed all products using this size first.",
+          "Prepričajte se, da ste najprej odstranili vse izdelke, ki uporabljajo to velikost.",
         variant: "destructive",
       });
     } finally {

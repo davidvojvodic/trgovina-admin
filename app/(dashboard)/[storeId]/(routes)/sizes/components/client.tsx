@@ -49,14 +49,14 @@ const SizeClient = ({ data }: SizeClientProps) => {
         {/* Render a button to add a new size */}
         <Button onClick={() => router.push(`/${params.storeId}/sizes/new`)}>
           <Plus className="mr-2 w-4 h-4" />
-          Dodaj nov
+          Dodaj novo
         </Button>
       </div>
       <Separator />
       {/* Render a data table with size data */}
       <DataTable searchKey="name" columns={columns} data={data} />
       {/* Display a section heading for API calls */}
-      <Heading title="API" description="API calls for sizes" />
+      <Heading title="API" description="API klici za velikosti" />
       <Separator />
       {/* Include an API list for sizes */}
       <ApiList entityName="sizes" entityIdName="sizeId" />

@@ -38,14 +38,14 @@ const ColorsClient = ({ data }: ColorsClientProps) => {
         {/* Render a button to add a new color */}
         <Button onClick={() => router.push(`/${params.storeId}/colors/new`)}>
           <Plus className="mr-2 w-4 h-4" />
-          Dodaj nov
+          Dodaj novo
         </Button>
       </div>
       <Separator />
       {/* Render a data table to display colors */}
       <DataTable searchKey="name" columns={columns} data={data} />
       {/* Render a heading for API information */}
-      <Heading title="API" description="API calls for colors" />
+      <Heading title="API" description="API klici za barve" />
       <Separator />
       {/* Render an API list */}
       <ApiList entityName="colors" entityIdName="colorId" />

@@ -21,16 +21,16 @@ export type CategoryColumn = {
 export const categoriesColumns: ColumnDef<CategoryColumn>[] = [
   {
     accessorKey: "name", // Key for accessing the name property
-    header: "Name", // Header text for the "Name" column
+    header: "Ime", // Header text for the "Name" column
   },
   {
     accessorKey: "billboard", // Key for accessing the billboard property
-    header: "Billboard", // Header text for the "Billboard" column
+    header: "Oglasni pano", // Header text for the "Billboard" column
     cell: ({ row }) => row.original.billboardLabel, // Render billboard label
   },
   {
     accessorKey: "createdAt", // Key for accessing the createdAt property
-    header: "Date", // Header text for the "Date" column
+    header: "Datum", // Header text for the "Date" column
   },
   {
     id: "actions", // Unique ID for the actions column

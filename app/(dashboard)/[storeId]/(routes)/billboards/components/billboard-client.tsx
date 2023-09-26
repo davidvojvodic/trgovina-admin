@@ -36,7 +36,7 @@ const BillboardClient = ({ data }: BillboardClientProps) => {
       {/* Render a section with heading, description, and a button to add a new billboard */}
       <div className="flex items-center justify-between">
         <Heading
-          title={`Oglasi (${data.length})`} // Display the count of billboards
+          title={`Oglasni panoji (${data.length})`} // Display the count of billboards
           description="Upravljajte oglasne panoje za svojo trgovino" // Description
         />
         <Button
@@ -49,7 +49,7 @@ const BillboardClient = ({ data }: BillboardClientProps) => {
       <Separator /> {/* Render a separator */}
       <DataTable searchKey="label" columns={columns} data={data} />{" "}
       {/* Render DataTable to display billboard data */}
-      <Heading title="API" description="API calls for Billboards" />{" "}
+      <Heading title="API" description="API klici za oglasne panoje" />{" "}
       {/* API heading */}
       <Separator /> {/* Render a separator */}
       <ApiList entityName="billboards" entityIdName="billboardId" />{" "}

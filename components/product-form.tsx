@@ -70,10 +70,14 @@ const ProductForm = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const title = initialData ? "Edit product" : "Create product";
-  const description = initialData ? "Edit a product" : "Add a new product";
-  const toastMessage = initialData ? "Product updated." : "Product created.";
-  const action = initialData ? "Save changes" : "Create";
+  const title = initialData ? "Uredi produkt" : "Ustvari produkt";
+  const description = initialData
+    ? "Uredi spremembe produktu"
+    : "Dodaj nov produkt";
+  const toastMessage = initialData
+    ? "Produkt posodobljen."
+    : "Produkt ustvarjen.";
+  const action = initialData ? "Shrani spremembe" : "Ustvari";
 
   // Initialize React Hook Form with a resolver for Zod schema validation.
   const form = useForm<ProductFormValues>({
@@ -114,14 +118,14 @@ const ProductForm = ({
       router.refresh();
       router.push(`/${params.storeId}/products`);
       toast({
-        title: "Success",
+        title: "Uspešno",
         description: toastMessage,
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: "Nekaj je šlo narobe",
         variant: "destructive",
       });
       console.log("[PRODUCT_FORM_ON_SUBMIT]", error);
@@ -142,14 +146,14 @@ const ProductForm = ({
       router.push(`/${params.storeId}/products`);
 
       toast({
-        title: "Success",
-        description: "Product deleted",
+        title: "Uspešno",
+        description: "Produkt je izbrisan.",
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Something went wrong.",
+        description: "Nekaj je šlo narobe.",
         variant: "destructive",
       });
     } finally {
@@ -196,7 +200,7 @@ const ProductForm = ({
             name="images"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Images</FormLabel>
+                <FormLabel>Slike</FormLabel>
                 <FormControl>
                   {/* ImageUpload component for handling images */}
                   <ImageUpload
@@ -224,11 +228,11 @@ const ProductForm = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Ime</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Product name"
+                      placeholder="Ime produkta"
                       {...field}
                     />
                   </FormControl>
@@ -242,7 +246,7 @@ const ProductForm = ({
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>Cena</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -261,7 +265,7 @@ const ProductForm = ({
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Kategorija</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
@@ -272,7 +276,7 @@ const ProductForm = ({
                       <SelectTrigger>
                         <SelectValue
                           defaultValue={field.value}
-                          placeholder="Select a category"
+                          placeholder="Izberi kategorijo"
                         />
                       </SelectTrigger>
                     </FormControl>
@@ -299,7 +303,7 @@ const ProductForm = ({
               name="sizeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Size</FormLabel>
+                  <FormLabel>Velikost</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
@@ -310,7 +314,7 @@ const ProductForm = ({
                       <SelectTrigger>
                         <SelectValue
                           defaultValue={field.value}
-                          placeholder="Select a size"
+                          placeholder="Izberi velikost"
                         />
                       </SelectTrigger>
                     </FormControl>
@@ -337,7 +341,7 @@ const ProductForm = ({
               name="colorId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel>Barva</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
@@ -348,7 +352,7 @@ const ProductForm = ({
                       <SelectTrigger>
                         <SelectValue
                           defaultValue={field.value}
-                          placeholder="Select a color"
+                          placeholder="Izberi barvo"
                         />
                       </SelectTrigger>
                     </FormControl>
@@ -382,9 +386,9 @@ const ProductForm = ({
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Featured</FormLabel>
+                    <FormLabel>Predstavljeno</FormLabel>
                     <FormDescription>
-                      This product will appear on the home page
+                      Ta produkt bo prikazan na domači strani
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -402,9 +406,9 @@ const ProductForm = ({
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Archived</FormLabel>
+                    <FormLabel>Arhiviran</FormLabel>
                     <FormDescription>
-                      This product will not appear anywhere in the store
+                      Ta izdelek ne bo prikazan nikjer v trgovini
                     </FormDescription>
                   </div>
                 </FormItem>

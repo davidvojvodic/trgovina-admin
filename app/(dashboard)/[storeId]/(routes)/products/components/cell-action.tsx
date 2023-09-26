@@ -61,15 +61,15 @@ export const CellAction = ({ data }: CellActionProps) => {
 
       // Show a success toast notification
       toast({
-        title: "Product Deleted",
-        description: "The product has been successfully deleted.",
+        title: "Produkt izbrisan",
+        description: "Produkt je bil uspešno izbrisan.",
         variant: "default",
       });
     } catch (error) {
       // Show an error toast notification if deletion fails
       toast({
         title: "Error",
-        description: "Something went wrong while deleting the product.",
+        description: "Pri brisanju produkta je šlo nekaj narobe.",
         variant: "destructive",
       });
     } finally {
@@ -92,14 +92,14 @@ export const CellAction = ({ data }: CellActionProps) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">Odpri menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         {/* Dropdown menu content */}
         <DropdownMenuContent align="end">
           {/* Dropdown menu label */}
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Dejanja</DropdownMenuLabel>
           {/* Option to navigate to the product update page */}
           <DropdownMenuItem
             onClick={() =>
@@ -112,12 +112,12 @@ export const CellAction = ({ data }: CellActionProps) => {
           {/* Option to copy the product ID */}
           <DropdownMenuItem onClick={() => onCopy(data.id)}>
             <Copy className="w-4 h-4 mr-2" />
-            Copy ID
+            Kopiraj ID
           </DropdownMenuItem>
           {/* Option to delete the product */}
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
-            Delete
+            Izbriši
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -48,10 +48,14 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
   const [loading, setLoading] = useState(false);
 
   // Determine whether the form is for editing or creating a size.
-  const title = initialData ? "Edit size" : "Create size";
-  const description = initialData ? "Edit a size" : "Add a new size";
-  const toastMessage = initialData ? "Size updated." : "Size created.";
-  const action = initialData ? "Save changes" : "Create";
+  const title = initialData ? "Uredi velikost" : "Ustvari velikost";
+  const description = initialData
+    ? "Uredi spremembe velikost"
+    : "Dodaj novo velikost";
+  const toastMessage = initialData
+    ? "Velikost posodobljena."
+    : "Velikost ustvarjena.";
+  const action = initialData ? "Shrani spremembe" : "Ustvari";
 
   // Initialize the form with React Hook Form and Zod resolver.
   const form = useForm<SizeFormValues>({
@@ -80,7 +84,7 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
 
       // Show a success toast message.
       toast({
-        title: "Success",
+        title: "Uspešno",
         description: toastMessage,
         variant: "default",
       });
@@ -88,7 +92,7 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
       // Show an error toast message.
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: "Nekaj je šlo narobe",
         variant: "destructive",
       });
       console.log("[SETTINGS_FORM_ON_SUBMIT]", error);
@@ -110,8 +114,8 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
 
       // Show a success toast message.
       toast({
-        title: "Success",
-        description: "Size deleted",
+        title: "Uspešno",
+        description: "Velikost izbrisana",
         variant: "default",
       });
     } catch (error) {
@@ -119,7 +123,7 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
       toast({
         title: "Error",
         description:
-          "Make sure you removed all products using this size first.",
+          "Prepričajte se, da ste najprej odstranili vse izdelke, ki uporabljajo to velikost.",
         variant: "destructive",
       });
     } finally {
@@ -167,11 +171,11 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Ime</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Size name"
+                      placeholder="Ime velikosti"
                       {...field}
                     />
                   </FormControl>
@@ -185,11 +189,11 @@ const SizeForm = ({ initialData }: SizeFormProps) => {
               name="value"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Value</FormLabel>
+                  <FormLabel>Vrednost</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Size value"
+                      placeholder="Vrednost velikosti"
                       {...field}
                     />
                   </FormControl>

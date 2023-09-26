@@ -36,14 +36,14 @@ const CategoryClient = ({ data }: CategoryClientProps) => {
       {/* Render a section with heading, description, and a button to add a new category */}
       <div className="flex items-center justify-between">
         <Heading
-          title={`Categories (${data.length})`} // Display the count of categories
-          description="Manage categories for your store" // Description
+          title={`Kategorije (${data.length})`} // Display the count of categories
+          description="Upravljajte kategorije za svojo trgovino" // Description
         />
         <Button
           onClick={() => router.push(`/${params.storeId}/categories/new`)} // Navigate to add new category page
         >
           <Plus className="mr-2 w-4 h-4" />
-          Add New
+          Dodaj novo
         </Button>
       </div>
       <Separator /> {/* Render a separator */}
@@ -53,7 +53,7 @@ const CategoryClient = ({ data }: CategoryClientProps) => {
         data={data}
       />{" "}
       {/* Render DataTable to display category data */}
-      <Heading title="API" description="API calls for Categories" />{" "}
+      <Heading title="API" description="API klici za kategorije" />{" "}
       {/* API heading */}
       <Separator /> {/* Render a separator */}
       <ApiList entityName="categories" entityIdName="categoryId" />{" "}

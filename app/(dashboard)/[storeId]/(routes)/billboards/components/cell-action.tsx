@@ -54,15 +54,15 @@ export const CellAction = ({ data }: CellActionProps) => {
       router.refresh();
 
       toast({
-        title: "Success",
-        description: "Billboard deleted",
+        title: "Uspešno",
+        description: "Oglasni pano je izbrisan",
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "Make sure you removed all categories using this billboard first.",
+          "Prepričajte se, da ste najprej odstranili vse kategorije, ki uporabljajo ta pano.",
         variant: "destructive",
       });
     } finally {

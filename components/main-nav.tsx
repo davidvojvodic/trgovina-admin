@@ -23,7 +23,7 @@ export function MainNav({
     },
     {
       href: `/${params.storeId}/billboards`,
-      label: "Oglasi",
+      label: "Oglasni panoji",
       active: pathname === `/${params.storeId}/billboards`,
     },
     {
@@ -43,7 +43,7 @@ export function MainNav({
     },
     {
       href: `/${params.storeId}/products`,
-      label: "Izdelki",
+      label: "Produkti",
       active: pathname === `/${params.storeId}/products`,
     },
     {

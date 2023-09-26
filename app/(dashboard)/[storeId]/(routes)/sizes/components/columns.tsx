@@ -28,11 +28,11 @@ export const columns: ColumnDef<SizeColumn>[] = [
   },
   {
     accessorKey: "value", // Define the accessor key for the value property.
-    header: "Value", // Set the column header text to "Value".
+    header: "Vrednost", // Set the column header text to "Value".
   },
   {
     accessorKey: "createdAt", // Define the accessor key for the createdAt property.
-    header: "Date", // Set the column header text to "Date".
+    header: "Datum", // Set the column header text to "Date".
   },
   {
     id: "actions", // Define a unique identifier for the actions column.
