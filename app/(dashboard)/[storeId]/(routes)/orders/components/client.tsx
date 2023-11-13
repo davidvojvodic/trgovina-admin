@@ -19,8 +19,8 @@ const OrderClient = ({ data }: OrderClientProps) => {
     <>
       {/* Display a heading with the number of orders */}
       <Heading
-        title={`Naročila (${data.length})`}
-        description="Upravljajte oglasne panoje za svojo trgovino"
+        title={`Orders (${data.length})`}
+        description="Manage orders for your store"
       />
       {/* Display a separator */}
       <Separator />

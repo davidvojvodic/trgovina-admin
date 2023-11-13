@@ -32,20 +32,20 @@ const ProductClient = ({ data }: ProductClientProps) => {
       {/* Display heading with the total number of products */}
       <div className="flex items-center justify-between">
         <Heading
-          title={`Produkti (${data.length})`}
-          description="Upravljajte produkte za svojo trgovino"
+          title={`Products (${data.length})`}
+          description="Manage products for your store"
         />
         {/* Button to navigate to the page for adding a new product */}
         <Button onClick={() => router.push(`/${params.storeId}/products/new`)}>
           <Plus className="mr-2 w-4 h-4" />
-          Dodaj nov
+          Create new
         </Button>
       </div>
       <Separator />
       {/* Display a data table for products */}
       <DataTable searchKey="name" columns={columns} data={data} />
       {/* Display a heading for the API section */}
-      <Heading title="API" description="API klici za produkte" />
+      <Heading title="API" description="API calls for products" />
       <Separator />
       {/* Display an API list for products */}
       <ApiList entityName="products" entityIdName="productId" />
