@@ -32,20 +32,20 @@ const ColorsClient = ({ data }: ColorsClientProps) => {
       <div className="flex items-center justify-between">
         {/* Render a heading with the count of colors */}
         <Heading
-          title={`Barve (${data.length})`}
-          description="Upravljajte barve za svojo trgovino"
+          title={`Colors (${data.length})`}
+          description="Manage colors for your store"
         />
         {/* Render a button to add a new color */}
         <Button onClick={() => router.push(`/${params.storeId}/colors/new`)}>
           <Plus className="mr-2 w-4 h-4" />
-          Dodaj novo
+          Create new
         </Button>
       </div>
       <Separator />
       {/* Render a data table to display colors */}
       <DataTable searchKey="name" columns={columns} data={data} />
       {/* Render a heading for API information */}
-      <Heading title="API" description="API klici za barve" />
+      <Heading title="API" description="API calls for colors" />
       <Separator />
       {/* Render an API list */}
       <ApiList entityName="colors" entityIdName="colorId" />

@@ -36,20 +36,20 @@ const BillboardClient = ({ data }: BillboardClientProps) => {
       {/* Render a section with heading, description, and a button to add a new billboard */}
       <div className="flex items-center justify-between">
         <Heading
-          title={`Oglasni panoji (${data.length})`} // Display the count of billboards
-          description="Upravljajte oglasne panoje za svojo trgovino" // Description
+          title={`Billboards (${data.length})`} // Display the count of billboards
+          description="Manage billboards for your store" // Description
         />
         <Button
           onClick={() => router.push(`/${params.storeId}/billboards/new`)} // Navigate to add new billboard page
         >
           <Plus className="mr-2 w-4 h-4" />
-          Dodaj nov
+          Create new
         </Button>
       </div>
       <Separator /> {/* Render a separator */}
       <DataTable searchKey="label" columns={columns} data={data} />{" "}
       {/* Render DataTable to display billboard data */}
-      <Heading title="API" description="API klici za oglasne panoje" />{" "}
+      <Heading title="API" description="API calls for billboards" />{" "}
       {/* API heading */}
       <Separator /> {/* Render a separator */}
       <ApiList entityName="billboards" entityIdName="billboardId" />{" "}

@@ -29,7 +29,7 @@ const DashboardPage = async ({ params }: DashboardPageProps) => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Skupni prihodki
+                Total revenue
               </CardTitle>
               <Euro className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
@@ -42,7 +42,7 @@ const DashboardPage = async ({ params }: DashboardPageProps) => {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Prodaje</CardTitle>
+              <CardTitle className="text-sm font-medium">Sales</CardTitle>
               <CreditCard className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -53,7 +53,7 @@ const DashboardPage = async ({ params }: DashboardPageProps) => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Izdelki na zalogi
+                Products in stock
               </CardTitle>
               <Package className="h-6 w-6 text-muted-foreground" />
             </CardHeader>
@@ -64,7 +64,7 @@ const DashboardPage = async ({ params }: DashboardPageProps) => {
         </div>
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Pregled</CardTitle>
+            <CardTitle>Overview</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
             <Overview data={graphRevenue} />

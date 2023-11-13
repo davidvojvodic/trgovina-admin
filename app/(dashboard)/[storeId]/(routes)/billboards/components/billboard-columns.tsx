@@ -20,11 +20,11 @@ export type BillboardColumn = {
 export const columns: ColumnDef<BillboardColumn>[] = [
   {
     accessorKey: "label", // Key for accessing the label property
-    header: "Oznaka", // Header text for the "Oznaka" column
+    header: "Label", // Header text for the "Oznaka" column
   },
   {
     accessorKey: "createdAt", // Key for accessing the createdAt property
-    header: "Datum", // Header text for the "Datum" column
+    header: "Date", // Header text for the "Datum" column
   },
   {
     id: "actions", // Unique ID for the actions column

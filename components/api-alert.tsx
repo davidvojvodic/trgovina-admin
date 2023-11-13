@@ -45,8 +45,8 @@ export const ApiAlert = ({
     navigator.clipboard.writeText(description);
     // Display a toast message when the API route is copied
     toast({
-      title: "Kopirano",
-      description: "API Route je kopiran v odložišče.",
+      title: "Copied",
+      description: "API Route is copied to the clipboard.",
     });
   };
 

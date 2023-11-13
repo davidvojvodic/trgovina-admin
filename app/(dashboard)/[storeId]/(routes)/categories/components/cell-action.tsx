@@ -40,8 +40,8 @@ export const CellAction = ({ data }: CellActionProps) => {
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast({
-      title: "Kopirano",
-      description: "ID kategorije kopiran v odložišče.",
+      title: "Copied",
+      description: "Category ID copied to clipboard.",
     });
   };
 
@@ -54,15 +54,15 @@ export const CellAction = ({ data }: CellActionProps) => {
       router.refresh();
 
       toast({
-        title: "Uspešno",
-        description: "Kategorija izbrisana",
+        title: "Success",
+        description: "Category deleted.",
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "Prepričajte se, da ste najprej odstranili vse izdelke, ki uporabljajo to kategorijo.",
+          "Make sure you remove all products using this category first.",
         variant: "destructive",
       });
     } finally {
@@ -84,12 +84,12 @@ export const CellAction = ({ data }: CellActionProps) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Odpri menu</span>
+            <span className="sr-only">Open menu</span>
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Dejanja</DropdownMenuLabel>
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
           {/* Option to update the category */}
           <DropdownMenuItem
             onClick={() =>
@@ -102,12 +102,12 @@ export const CellAction = ({ data }: CellActionProps) => {
           {/* Option to copy the category ID */}
           <DropdownMenuItem onClick={() => onCopy(data.id)}>
             <Copy className="w-4 h-4 mr-2" />
-            Kopiraj ID
+            Copy ID
           </DropdownMenuItem>
           {/* Option to delete the category */}
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
-            Izbriši
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -17,43 +17,43 @@ export function MainNav({
   const routes = [
     {
       href: `/${params.storeId}`,
-      label: "Pregled",
+      label: "Overview",
       // Check if the current pathname matches this route to mark it as active.
       active: pathname === `/${params.storeId}`,
     },
     {
       href: `/${params.storeId}/billboards`,
-      label: "Oglasni panoji",
+      label: "Billboards",
       active: pathname === `/${params.storeId}/billboards`,
     },
     {
       href: `/${params.storeId}/categories`,
-      label: "Kategorije",
+      label: "Categories",
       active: pathname === `/${params.storeId}/categories`,
     },
     {
       href: `/${params.storeId}/sizes`,
-      label: "Velikosti",
+      label: "Sizes",
       active: pathname === `/${params.storeId}/sizes`,
     },
     {
       href: `/${params.storeId}/colors`,
-      label: "Barve",
+      label: "Colors",
       active: pathname === `/${params.storeId}/colors`,
     },
     {
       href: `/${params.storeId}/products`,
-      label: "Produkti",
+      label: "Products",
       active: pathname === `/${params.storeId}/products`,
     },
     {
       href: `/${params.storeId}/orders`,
-      label: "Naročila",
+      label: "Orders",
       active: pathname === `/${params.storeId}/orders`,
     },
     {
       href: `/${params.storeId}/settings`,
-      label: "Nastavitve",
+      label: "Settings",
       active: pathname === `/${params.storeId}/settings`,
     },
   ];

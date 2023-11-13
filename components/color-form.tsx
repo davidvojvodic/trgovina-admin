@@ -58,14 +58,10 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
   const [loading, setLoading] = useState(false);
 
   // Determine the title, description, toast message, and action based on whether it's for editing or creating a color
-  const title = initialData ? "Uredi barvo" : "Ustvari barvo";
-  const description = initialData
-    ? "Uredi spremembe barve"
-    : "Dodaj novo barvo";
-  const toastMessage = initialData
-    ? "Barva posodobljena."
-    : "Barva ustvarjena.";
-  const action = initialData ? "Shrani spremembe" : "Ustvari";
+  const title = initialData ? "Edit the color" : "Create color";
+  const description = initialData ? "Edit color changes" : "Add a new color";
+  const toastMessage = initialData ? "Color updated." : "Color created.";
+  const action = initialData ? "Save changes" : "Create";
 
   // Initialize the form with react-hook-form
   const form = useForm<ColorFormValues>({
@@ -89,14 +85,14 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
       router.refresh();
       router.push(`/${params.storeId}/colors`);
       toast({
-        title: "Uspešno",
+        title: "Success",
         description: toastMessage,
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Nekaj je šlo narobe",
+        description: "Something went wrong",
         variant: "destructive",
       });
       console.log("[COLORS_FORM_ON_SUBMIT]", error);
@@ -115,15 +111,15 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
       router.push(`/${params.storeId}/colors`);
 
       toast({
-        title: "Uspešno",
-        description: "Barva izbrisana",
+        title: "Success",
+        description: "Color deleted.",
         variant: "default",
       });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "Prepričajte se, da ste najprej odstranili vse izdelke, ki uporabljajo to barvo.",
+          "Make sure you remove all products that use this color first.",
         variant: "destructive",
       });
     } finally {
@@ -166,11 +162,11 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ime</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Ime barve"
+                      placeholder="Color name"
                       {...field}
                     />
                   </FormControl>
@@ -183,12 +179,12 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
               name="value"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vrednost</FormLabel>
+                  <FormLabel>Value</FormLabel>
                   <FormControl>
                     <div className="flex items-center gap-x-4">
                       <Input
                         disabled={loading}
-                        placeholder="Vrednost barve"
+                        placeholder="Color value"
                         {...field}
                       />
                       <div

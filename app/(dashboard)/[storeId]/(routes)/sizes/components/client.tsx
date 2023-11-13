@@ -43,20 +43,20 @@ const SizeClient = ({ data }: SizeClientProps) => {
       <div className="flex items-center justify-between">
         {/* Display the title and description for the size client */}
         <Heading
-          title={`Velikosti (${data.length})`}
-          description="Upravljajte velikosti za svojo trgovino"
+          title={`Sizes (${data.length})`}
+          description="Manage sizes for your store"
         />
         {/* Render a button to add a new size */}
         <Button onClick={() => router.push(`/${params.storeId}/sizes/new`)}>
           <Plus className="mr-2 w-4 h-4" />
-          Dodaj novo
+          Create new
         </Button>
       </div>
       <Separator />
       {/* Render a data table with size data */}
       <DataTable searchKey="name" columns={columns} data={data} />
       {/* Display a section heading for API calls */}
-      <Heading title="API" description="API klici za velikosti" />
+      <Heading title="API" description="API calls for sizes" />
       <Separator />
       {/* Include an API list for sizes */}
       <ApiList entityName="sizes" entityIdName="sizeId" />

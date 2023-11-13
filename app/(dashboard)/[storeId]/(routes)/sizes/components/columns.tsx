@@ -24,15 +24,15 @@ export type SizeColumn = {
 export const columns: ColumnDef<SizeColumn>[] = [
   {
     accessorKey: "name", // Define the accessor key for the name property.
-    header: "Ime", // Set the column header text to "Ime".
+    header: "Name", // Set the column header text to "Ime".
   },
   {
     accessorKey: "value", // Define the accessor key for the value property.
-    header: "Vrednost", // Set the column header text to "Value".
+    header: "Value", // Set the column header text to "Value".
   },
   {
     accessorKey: "createdAt", // Define the accessor key for the createdAt property.
-    header: "Datum", // Set the column header text to "Date".
+    header: "Date", // Set the column header text to "Date".
   },
   {
     id: "actions", // Define a unique identifier for the actions column.

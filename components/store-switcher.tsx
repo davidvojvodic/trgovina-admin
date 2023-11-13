@@ -69,7 +69,7 @@ export default function StoreSwitcher({
           size="sm"
           role="combobox"
           aria-expanded={open}
-          aria-label="Izberi trgovino"
+          aria-label="Choose store"
           className={cn("w-[200px] justify-between", className)}
         >
           <StoreIcon className="mr-2 h-4 w-4" />
@@ -81,9 +81,9 @@ export default function StoreSwitcher({
         {/* Popover content for store selection */}
         <Command>
           <CommandList>
-            <CommandInput placeholder="Poišči trgovino..." />
+            <CommandInput placeholder="Find a store..." />
             <CommandEmpty>No store found.</CommandEmpty>
-            <CommandGroup heading="Trgovine">
+            <CommandGroup heading="Stores">
               {formattedItems.map((store) => (
                 <CommandItem
                   key={store.value}
@@ -115,7 +115,7 @@ export default function StoreSwitcher({
                 }}
               >
                 <PlusCircle className="mr-2 h-5 w-5" />
-                Ustvari trgovino
+                Create store
               </CommandItem>
             </CommandGroup>
           </CommandList>

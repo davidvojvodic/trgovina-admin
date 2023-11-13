@@ -67,14 +67,12 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
   const [loading, setLoading] = useState(false);
 
   // Determine whether the form is used for editing or creating a category
-  const title = initialData ? "Uredi kategorijo" : "Ustvari kategorijo";
+  const title = initialData ? "Edit category" : "Create category";
   const description = initialData
-    ? "Spremenite podatke o kategorijah."
-    : "Dodaj novo kategorijo";
-  const toastMessage = initialData
-    ? "Kategorijo posodobljena."
-    : "Kategorija ustvarjena.";
-  const action = initialData ? "Shrani spremembe" : "Ustvari";
+    ? "Change category information."
+    : "Add a new category";
+  const toastMessage = initialData ? "Category updated." : "Category created.";
+  const action = initialData ? "Save changes" : "Create";
 
   // Initialize React Hook Form with the form schema and default values
   const form = useForm<CategoryFormValues>({
@@ -100,7 +98,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
       router.push(`/${params.storeId}/categories`);
       // Display a success toast message
       toast({
-        title: "Uspešno",
+        title: "Success",
         description: toastMessage,
         variant: "default",
       });
@@ -108,7 +106,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
       // Handle errors and display an error toast message
       toast({
         title: "Error",
-        description: "Nekaj je šlo narobe",
+        description: "Something went wrong.",
         variant: "destructive",
       });
       console.error("[SETTINGS_FORM_ON_SUBMIT]", error);
@@ -132,8 +130,8 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
 
       // Display a success toast message
       toast({
-        title: "Uspešno",
-        description: "Kategorija je izbrisana",
+        title: "Success",
+        description: "The category has been deleted.",
         variant: "default",
       });
     } catch (error) {
@@ -141,7 +139,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
       toast({
         title: "Error",
         description:
-          "Prepričajte se, da ste najprej odstranili vse izdelke, ki uporabljajo to kategorijo.",
+          "Make sure you remove all products using this category first.",
         variant: "destructive",
       });
     } finally {
@@ -190,11 +188,11 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ime</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Ime kategorije"
+                      placeholder="Category name"
                       {...field}
                     />
                   </FormControl>
@@ -208,7 +206,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
               name="billboardId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Oglasni pano</FormLabel>
+                  <FormLabel>Billboard</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
@@ -219,7 +217,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                       <SelectTrigger>
                         <SelectValue
                           defaultValue={field.value}
-                          placeholder="Izberi oglasni pano"
+                          placeholder="Select billboard"
                         />
                       </SelectTrigger>
                     </FormControl>
