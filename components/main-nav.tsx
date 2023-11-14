@@ -17,7 +17,7 @@ export function MainNav({
   const routes = [
     {
       href: `/${params.storeId}`,
-      label: "Overview",
+      label: "Dashboard",
       // Check if the current pathname matches this route to mark it as active.
       active: pathname === `/${params.storeId}`,
     },
