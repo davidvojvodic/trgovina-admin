@@ -26,6 +26,7 @@ model Store {
   orders     Order[]     @relation("StoreToOrder") // Relationship to orders.
   createdAt  DateTime    @default(now()) // Timestamp for when the store was created.
   updatedAt  DateTime    @updatedAt // Timestamp for when the store was last updated.
+  Enquiries  Enquiry[]   @relation("StoreToEnquiry")
 }
 
 // Define the "Billboard" table/model.
@@ -149,4 +150,17 @@ model OrderItem {
 
   @@index([orderId])
   @@index([productId])
+}
+
+model Enquiry {
+  id        String   @id @default(uuid())
+  storeId   String // ID of the store associated with the size.
+  store     Store    @relation("StoreToEnquiry", fields: [storeId], references: [id]) // Relationship to the store.
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now()) // Timestamp for when the size was created.
+  updatedAt DateTime @updatedAt // Timestamp for when the size was last updated.
+
+  @@index([storeId])
 }
