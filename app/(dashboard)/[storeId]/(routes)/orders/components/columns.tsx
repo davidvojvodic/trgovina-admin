@@ -1,6 +1,7 @@
 "use client";
 // Import necessary modules and components
 import { ColumnDef } from "@tanstack/react-table";
+import Image from "next/image";
 
 // Define the OrderColumn type
 export type OrderColumn = {
@@ -34,5 +35,6 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "isPaid", // Column accessor key for isPaid
     header: "Paid", // Column header text
+    cell: ({ row }) => (row.original.isPaid ? <Image src="/checked.png" alt="check" width={20} height={20} /> : <Image src="/unchecked.png" alt="check" width={20} height={20} />),
   },
 ];

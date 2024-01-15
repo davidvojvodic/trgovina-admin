@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
+import Image from "next/image";
 
 export type ProductColumn = {
   id: string;
@@ -23,10 +24,12 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "isArchived",
     header: "Archived",
+    cell: ({ row }) => <>{row.original.isArchived ? <Image src="/checked.png" alt="check" width={20} height={20} /> : <Image src="/unchecked.png" alt="check" width={20} height={20} />}</>,
   },
   {
     accessorKey: "isFeatured",
     header: "Featured",
+    cell: ({ row }) => <>{row.original.isFeatured ? <Image src="/checked.png" alt="check" width={20} height={20} /> : <Image src="/unchecked.png" alt="check" width={20} height={20} />}</>,
   },
   {
     accessorKey: "price",
