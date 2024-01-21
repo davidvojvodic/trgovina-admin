@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         const body = await req.json();
 
         // Step 3: Extract the 'name' property from the request body
-        const { name } = body;
+        const { name, storeImage } = body;
 
         // Step 4: Check if the user is not authenticated, and if so, return a 401 Unauthorized response
         if (!userId) {
@@ -30,6 +30,7 @@ export async function POST(req: Request) {
             data: {
                 name,
                 userId,
+                storeImage
             },
         });
 

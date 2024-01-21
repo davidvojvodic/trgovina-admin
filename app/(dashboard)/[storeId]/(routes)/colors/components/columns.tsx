@@ -42,6 +42,7 @@ export const columns: ColumnDef<ColorColumn>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => <CellAction data={row.original} />, // Cell action for color management
   },
 ];

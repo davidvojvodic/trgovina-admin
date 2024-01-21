@@ -4,6 +4,25 @@ import { auth } from "@clerk/nextjs"; // Import the auth function from the Clerk
 import { NextResponse } from "next/server"; // Import the NextResponse class from the next/server module
 
 // Define an asynchronous function called PATCH that handles HTTP PATCH requests
+
+export async function GET(req: Request, {params}: {params: {storeId: string}}) {
+    try {
+        if(!params.storeId) {
+            return new NextResponse("Store ID is required", {status: 400});
+        }
+
+        const store = await prismadb.store.findUnique({
+            where: {
+                id: params.storeId
+            },
+        });
+
+        return NextResponse.json(store);
+    } catch (error) {
+        console.log("[STORE_GET]", error);
+        return new NextResponse("Internal error", {status: 500});
+    }
+}
 export async function PATCH(req: Request, { params }: { params: { storeId: string } }) {
     try {
         // Step 1: Get the userId from the authenticated user using the auth() function
@@ -13,7 +32,7 @@ export async function PATCH(req: Request, { params }: { params: { storeId: strin
         const body = await req.json();
 
         // Step 3: Extract the 'name' property from the request body
-        const { name } = body;
+        const { name, storeImage } = body;
 
         // Step 4: Check if the user is not authenticated, and if so, return a 401 Unauthorized response
         if (!userId) {
@@ -38,6 +57,7 @@ export async function PATCH(req: Request, { params }: { params: { storeId: strin
             },
             data: {
                 name,
+                storeImage,
             },
         });
 

@@ -34,6 +34,7 @@ export const categoriesColumns: ColumnDef<CategoryColumn>[] = [
   },
   {
     id: "actions", // Unique ID for the actions column
+    header: "Actions", // Header text for the "Actions" column
     cell: ({ row }) => <CellAction data={row.original} />, // Render cell actions using the CellAction component
   },
 ];

@@ -18,15 +18,16 @@ model Store {
   id         String      @id @default(uuid()) // Unique identifier for the store.
   name       String // Name of the store.
   userId     String // User ID associated with the store.
+  storeImage String?
   billboards Billboard[] @relation("StoreToBillboard") // Relationship to billboards.
   categories Category[]  @relation("StoreToCategory") // Relationship to categories.
   sizes      Size[]      @relation("StoreToSize") // Relationship to sizes.
   colors     Color[]     @relation("StoreToColor") // Relationship to colors.
   products   Product[]   @relation("StoreToProduct") // Relationship to products.
   orders     Order[]     @relation("StoreToOrder") // Relationship to orders.
+  Enquiries  Enquiry[]   @relation("StoreToEnquiry")
   createdAt  DateTime    @default(now()) // Timestamp for when the store was created.
   updatedAt  DateTime    @updatedAt // Timestamp for when the store was last updated.
-  Enquiries  Enquiry[]   @relation("StoreToEnquiry")
 }
 
 // Define the "Billboard" table/model.

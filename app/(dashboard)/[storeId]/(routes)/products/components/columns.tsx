@@ -62,6 +62,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
   },
   {
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

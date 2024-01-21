@@ -24,10 +24,12 @@ import { useParams, useRouter } from "next/navigation";
 import AlertModal from "./modals/alert-modal";
 import { ApiAlert } from "./api-alert";
 import { useOrigin } from "@/hooks/use-origin";
+import ImageUpload from "./image-upload";
 
 // Define the schema for form validation using Zod.
 const formSchema = z.object({
   name: z.string().min(1),
+  storeImage: z.string().nullable().optional(),
 });
 
 type SettingsFormValues = z.infer<typeof formSchema>;
@@ -139,9 +141,9 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full"
+          className="space-y-8 w-full "
         >
-          <div className="grid grid-cols-3 gap-8">
+          <div className="flex flex-col gap-8">
             {/* Store name field */}
             <FormField
               control={form.control}
@@ -160,6 +162,26 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
                 </FormItem>
               )}
             />
+          
+              <FormField
+                control={form.control}
+                name="storeImage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Store Image</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value ? [field.value] : []}
+                        disabled={loading}
+                        onChange={(url) => field.onChange(url)}
+                        onRemove={() => field.onChange("")}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
           </div>
           {/* Save changes button */}
           <Button disabled={loading} className="ml-auto" type="submit">

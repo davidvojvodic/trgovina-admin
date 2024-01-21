@@ -28,6 +28,7 @@ export const columns: ColumnDef<BillboardColumn>[] = [
   },
   {
     id: "actions", // Unique ID for the actions column
+    header: "Actions", // Header text for the actions column
     cell: ({ row }) => <CellAction data={row.original} />, // Render cell actions using the CellAction component
   },
 ];

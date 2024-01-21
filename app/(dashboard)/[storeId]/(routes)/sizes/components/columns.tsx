@@ -36,6 +36,7 @@ export const columns: ColumnDef<SizeColumn>[] = [
   },
   {
     id: "actions", // Define a unique identifier for the actions column.
+    header: "Actions", // Set the column header text to "Actions".
     cell: ({ row }) => <CellAction data={row.original} />, // Render actions using the CellAction component.
   },
 ];
