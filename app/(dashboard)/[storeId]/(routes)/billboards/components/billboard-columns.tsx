@@ -12,12 +12,17 @@ import { CellAction } from "./cell-action";
 // Define the type for BillboardColumn representing billboard data
 export type BillboardColumn = {
   id: string;
-  label: string;
+  name: string;
+  label?: string | null;
   createdAt: string;
 };
 
 // Define an array of columns for displaying billboard data
 export const columns: ColumnDef<BillboardColumn>[] = [
+  {
+    accessorKey: "name", // Key for accessing the name property
+    header: "Name", // Header text for the "Ime" column
+  },
   {
     accessorKey: "label", // Key for accessing the label property
     header: "Label", // Header text for the "Oznaka" column

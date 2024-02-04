@@ -13,7 +13,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         const body = await req.json();
 
         // Step 3: Extract the 'label' and 'imageUrl' properties from the request body
-        const { label, imageUrl } = body;
+        const { label, imageUrl, name } = body;
 
         // Step 4: Check if the user is not authenticated, and if so, return a 401 Unauthorized response
         if (!userId) {
@@ -21,8 +21,8 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         }
 
         // Step 5: Check if the 'label' property is missing in the request body, and if so, return a 400 Bad Request response
-        if (!label) {
-            return new NextResponse("Label is required", { status: 400 });
+        if (!name) {
+            return new NextResponse("Name is required", { status: 400 });
         }
 
         // Step 6: Check if the 'imageUrl' property is missing in the request body, and if so, return a 400 Bad Request response
@@ -53,6 +53,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
             data: {
                 label,
                 imageUrl,
+                name,
                 storeId: params.storeId,
             },
         });

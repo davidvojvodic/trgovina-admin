@@ -35,8 +35,9 @@ import ImageUpload from "./image-upload";
 
 // Define the form schema for billboard data validation
 const formSchema = z.object({
-  label: z.string().min(1),
+  label: z.string().optional(),
   imageUrl: z.string().min(1),
+  name: z.string().min(1),
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
@@ -69,7 +70,14 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
   // Initialize react-hook-form with the form schema and initial values
   const form = useForm<BillboardFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || { label: "", imageUrl: "" },
+    defaultValues: (initialData && {
+      ...initialData,
+      label: initialData.label ?? "",
+    }) || {
+      label: "",
+      imageUrl: "",
+      name: "",
+    },
   });
 
   // Handle form submission
@@ -183,6 +191,25 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
               </FormItem>
             )}
           />
+           <div className="grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Billboard name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           {/* Grid for label input */}
           <div className="grid grid-cols-3 gap-8">
             <FormField
@@ -198,11 +225,12 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+
+         
           {/* Submit button */}
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}

@@ -27,6 +27,7 @@ const Billboards = async ({ params }: { params: { storeId: string } }) => {
   // Format the fetched billboards into a structured format for rendering
   const formattedBillboards: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,
+    name: item.name,
     label: item.label,
     createdAt: format(item.createdAt, "MMMM do, yyyy"), // Format creation date
   }));

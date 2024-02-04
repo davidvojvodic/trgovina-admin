@@ -26,9 +26,9 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         }
 
         // Step 6: Check if the 'billboardId' property is missing in the request body, and if so, return a 400 Bad Request response
-        if (!billboardId) {
-            return new NextResponse("Billboard id is required", { status: 400 });
-        }
+        // if (!billboardId) {
+        //     return new NextResponse("Billboard id is required", { status: 400 });
+        // }
 
         // Step 7: Check if the 'storeId' parameter is missing in the request, and if so, return a 400 Bad Request response
         if (!params.storeId) {

@@ -35,7 +35,8 @@ model Billboard {
   id         String     @id @default(uuid()) // Unique identifier for the billboard.
   storeId    String // ID of the store associated with the billboard.
   store      Store      @relation("StoreToBillboard", fields: [storeId], references: [id]) // Relationship to the store.
-  label      String // Label or name of the billboard.
+  name       String // Name of the billboard.
+  label      String? // Label or name of the billboard.
   imageUrl   String // URL of the billboard image.
   categories Category[] // Relationship to categories.
   createdAt  DateTime   @default(now()) // Timestamp for when the billboard was created.
@@ -49,8 +50,8 @@ model Category {
   id          String    @id @default(uuid()) // Unique identifier for the category.
   storeId     String // ID of the store associated with the category.
   store       Store     @relation("StoreToCategory", fields: [storeId], references: [id]) // Relationship to the store.
-  billboardId String // ID of the associated billboard.
-  billboard   Billboard @relation(fields: [billboardId], references: [id]) // Relationship to the billboard.
+  billboardId String? // ID of the associated billboard.
+  billboard   Billboard? @relation(fields: [billboardId], references: [id]) // Relationship to the billboard.
   products    Product[] @relation("CategoryToProduct") // Relationship to products.
   name        String // Name of the category.
   createdAt   DateTime  @default(now()) // Timestamp for when the category was created.

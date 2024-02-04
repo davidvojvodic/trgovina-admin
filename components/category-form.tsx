@@ -39,7 +39,7 @@ import { useState } from "react";
 // Define the form schema using Zod
 const formSchema = z.object({
   name: z.string().min(1), // Category name is a required string with a minimum length of 1 character
-  billboardId: z.string().min(1), // Billboard ID is a required string with a minimum length of 1 character
+  billboardId: z.string().optional(), // Billboard ID is a required string with a minimum length of 1 character
 });
 
 // Define the type for category form values
@@ -77,7 +77,12 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
   // Initialize React Hook Form with the form schema and default values
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || { name: "", billboardId: "" },
+    defaultValues: initialData
+      ? {
+          name: initialData.name,
+          billboardId: initialData.billboardId ?? "",
+        }
+      : { name: "", billboardId: "" },
   });
 
   // Function to handle form submission
