@@ -25,39 +25,52 @@ model Store {
   colors     Color[]     @relation("StoreToColor") // Relationship to colors.
   products   Product[]   @relation("StoreToProduct") // Relationship to products.
   orders     Order[]     @relation("StoreToOrder") // Relationship to orders.
-  Enquiries  Enquiry[]   @relation("StoreToEnquiry")
+  // Enquiries  Enquiry[]   @relation("StoreToEnquiry")
   createdAt  DateTime    @default(now()) // Timestamp for when the store was created.
   updatedAt  DateTime    @updatedAt // Timestamp for when the store was last updated.
 }
 
 // Define the "Billboard" table/model.
 model Billboard {
-  id         String     @id @default(uuid()) // Unique identifier for the billboard.
-  storeId    String // ID of the store associated with the billboard.
-  store      Store      @relation("StoreToBillboard", fields: [storeId], references: [id]) // Relationship to the store.
-  name       String // Name of the billboard.
-  label      String? // Label or name of the billboard.
-  imageUrl   String // URL of the billboard image.
-  categories Category[] // Relationship to categories.
-  createdAt  DateTime   @default(now()) // Timestamp for when the billboard was created.
-  updatedAt  DateTime   @updatedAt // Timestamp for when the billboard was last updated.
+  id             String     @id @default(uuid()) // Unique identifier for the billboard.
+  storeId        String // ID of the store associated with the billboard.
+  store          Store      @relation("StoreToBillboard", fields: [storeId], references: [id]) // Relationship to the store.
+  name           String // Name of the billboard.
+  label          String? // Label or name of the billboard.
+  isActive       Boolean    @default(true)
+  imageUrl       String // URL of the billboard image.
+  displayOrder   Int? // Nullable in case ordering is not always applicable
+  startDate      DateTime?
+  endDate        DateTime?
+  tabletImageUrl String?
+  mobileImageUrl String?
+  categories     Category[] // Relationship to categories.
+  createdAt      DateTime   @default(now()) // Timestamp for when the billboard was created.
+  updatedAt      DateTime   @updatedAt // Timestamp for when the billboard was last updated.
 
   @@index([storeId])
 }
 
 // Define the "Category" table/model.
 model Category {
-  id          String    @id @default(uuid()) // Unique identifier for the category.
-  storeId     String // ID of the store associated with the category.
-  store       Store     @relation("StoreToCategory", fields: [storeId], references: [id]) // Relationship to the store.
-  billboardId String? // ID of the associated billboard.
-  billboard   Billboard? @relation(fields: [billboardId], references: [id]) // Relationship to the billboard.
-  products    Product[] @relation("CategoryToProduct") // Relationship to products.
-  name        String // Name of the category.
-  createdAt   DateTime  @default(now()) // Timestamp for when the category was created.
-  updatedAt   DateTime  @updatedAt // Timestamp for when the category was last updated.
+  id              String     @id @default(uuid()) // Unique identifier for the category.
+  name            String // Name of the category.
+  description     String? // Detailed description of the category.
+  slug            String     @unique // SEO-friendly URL slug.
+  metaDescription String? // SEO meta description for the category.
+  parentId        String? // ID of the parent category for nested categorization, nullable for top-level categories.
+  parent          Category?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction) // Self-relation for parent category.
+  children        Category[] @relation("ParentChild") // Self-relation for child categories.
+  storeId         String // ID of the store associated with the category.
+  store           Store      @relation("StoreToCategory", fields: [storeId], references: [id]) // Relationship to the store.
+  billboardId     String? // Optional ID of the associated billboard.
+  billboard       Billboard? @relation(fields: [billboardId], references: [id]) // Optional relationship to the billboard.
+  products        Product[]  @relation("CategoryToProduct") // Relationship to products.
+  createdAt       DateTime   @default(now()) // Timestamp for when the category was created.
+  updatedAt       DateTime   @updatedAt // Timestamp for when the category was last updated.
 
   @@index([storeId])
+  @@index([parentId])
   @@index([billboardId])
 }
 
@@ -91,38 +104,59 @@ model Color {
 
 // Define the "Product" table/model.
 model Product {
-  id         String      @id @default(uuid()) // Unique identifier for the product.
-  storeId    String // ID of the store associated with the product.
-  store      Store       @relation("StoreToProduct", fields: [storeId], references: [id]) // Relationship to the store.
-  categoryId String // ID of the associated category.
-  category   Category    @relation("CategoryToProduct", fields: [categoryId], references: [id]) // Relationship to the category.
-  name       String // Name of the product.
-  price      Decimal // Price of the product.
-  isFeatured Boolean     @default(false) // Flag indicating if the product is featured.
-  isArchived Boolean     @default(false) // Flag indicating if the product is archived.
-  sizeId     String // ID of the associated size.
-  size       Size        @relation(fields: [sizeId], references: [id]) // Relationship to the size.
-  colorId    String // ID of the associated color.
-  color      Color       @relation(fields: [colorId], references: [id]) // Relationship to the color.
-  images     Image[] // Relationship to product images.
-  orderItems OrderItem[] // Relationship to order items.
-  createdAt  DateTime    @default(now()) // Timestamp for when the product was created.
-  updatedAt  DateTime    @updatedAt // Timestamp for when the product was last updated.
+  id            String   @id @default(uuid()) // Unique identifier for the product.
+  storeId       String // ID of the store associated with the product.
+  store         Store    @relation("StoreToProduct", fields: [storeId], references: [id]) // Relationship to the store.
+  categoryId    String // ID of the associated category.
+  category      Category @relation("CategoryToProduct", fields: [categoryId], references: [id]) // Relationship to the category.
+  name          String // Name of the product.
+  description   String // Detailed description of the product.
+  price         Decimal  @db.Decimal(10, 2) // Price of the product with precision and scale.
+  stockQuantity Int // Inventory levels for the product.
+
+  isFeatured      Boolean     @default(false) // Flag indicating if the product is featured.
+  isArchived      Boolean     @default(false) // Flag indicating if the product is archived.
+  sizeId          String? // ID of the associated size, now optional.
+  size            Size?       @relation(fields: [sizeId], references: [id]) // Optional relationship to the size.
+  colorId         String? // ID of the associated color, now optional.
+  color           Color?      @relation(fields: [colorId], references: [id]) // Optional relationship to the color.
+  slug            String      @unique // SEO-friendly URL.
+  metaDescription String // SEO meta description.
+  attributes      Attribute[] // Relationship to generic attributes.
+  images          Image[] // Relationship to product images.
+  orderItems      OrderItem[] // Relationship to order items.
+  createdAt       DateTime    @default(now()) // Timestamp for when the product was created.
+  updatedAt       DateTime    @updatedAt // Timestamp for when the product was last updated.
 
   @@index([storeId])
   @@index([categoryId])
-  @@index([sizeId])
-  @@index([colorId])
+}
+
+model Attribute {
+  id        String   @id @default(uuid()) // Unique identifier for the attribute.
+  productId String // ID of the associated product.
+  product   Product  @relation(fields: [productId], references: [id]) // Relationship to the product.
+  key       String // Attribute name, e.g., "Material", "Dimensions".
+  value     String // Attribute value, e.g., "Cotton", "10x20x30cm".
+  createdAt DateTime @default(now()) // Timestamp for when the attribute was created.
+  updatedAt DateTime @updatedAt // Timestamp for when the attribute was last updated.
+
+  @@index([productId])
 }
 
 // Define the "Image" table/model.
 model Image {
-  id        String   @id @default(uuid()) // Unique identifier for the image.
-  productId String // ID of the associated product.
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade) // Relationship to the product.
-  url       String // URL of the image.
-  createdAt DateTime @default(now()) // Timestamp for when the image was created.
-  updatedAt DateTime @updatedAt // Timestamp for when the image was last updated.
+  id           String   @id @default(uuid()) // Unique identifier for the image.
+  productId    String // ID of the associated product.
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade) // Relationship to the product.
+  url          String // URL of the image, could be used for the primary or high-resolution image.
+  thumbnailUrl String? // URL for the thumbnail-sized version of the image.
+  mediumUrl    String? // URL for the medium-sized version of the image.
+  altText      String? // Alternative text for the image, enhancing accessibility and SEO.
+  imageType    String? // Type of the image, e.g., 'thumbnail', 'gallery', 'zoomed'.
+  order        Int? // Order in which the image should appear.
+  createdAt    DateTime @default(now()) // Timestamp for when the image was created.
+  updatedAt    DateTime @updatedAt // Timestamp for when the image was last updated.
 
   @@index([productId])
 }
@@ -136,33 +170,37 @@ model Order {
   isPaid     Boolean     @default(false) // Flag indicating if the order is paid.
   phone      String      @default("") // Phone number associated with the order.
   address    String      @default("") // Address associated with the order.
+  status     String // Status of the order (e.g., processing, shipped, delivered).
+  total      Decimal     @default(0) // Total amount of the order.
   createdAt  DateTime    @default(now()) // Timestamp for when the order was created.
-  updatedAt  DateTime    @updatedAt // Timestamp for when the order was last updated.
+
+  updatedAt DateTime @updatedAt // Timestamp for when the order was last updated.
 
   @@index([storeId])
 }
 
-// Define the "OrderItem" table/model.
 model OrderItem {
   id        String  @id @default(uuid()) // Unique identifier for the order item.
   orderId   String // ID of the associated order.
   order     Order   @relation(fields: [orderId], references: [id]) // Relationship to the order.
   productId String // ID of the associated product.
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade) // Relationship to the product.
+  quantity  Int // Quantity of the product ordered.
+  unitPrice Decimal @default(0) // Price of the product per unit at the time of the order.
 
   @@index([orderId])
   @@index([productId])
 }
 
-model Enquiry {
-  id        String   @id @default(uuid())
-  storeId   String // ID of the store associated with the size.
-  store     Store    @relation("StoreToEnquiry", fields: [storeId], references: [id]) // Relationship to the store.
-  name      String
-  email     String
-  message   String
-  createdAt DateTime @default(now()) // Timestamp for when the size was created.
-  updatedAt DateTime @updatedAt // Timestamp for when the size was last updated.
+// model Enquiry {
+//   id        String   @id @default(uuid())
+//   storeId   String // ID of the store associated with the size.
+//   store     Store    @relation("StoreToEnquiry", fields: [storeId], references: [id]) // Relationship to the store.
+//   name      String
+//   email     String
+//   message   String
+//   createdAt DateTime @default(now()) // Timestamp for when the size was created.
+//   updatedAt DateTime @updatedAt // Timestamp for when the size was last updated.
 
-  @@index([storeId])
-}
+//   @@index([storeId])
+// }

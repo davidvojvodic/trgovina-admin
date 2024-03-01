@@ -51,11 +51,11 @@ export function MainNav({
       label: "Orders",
       active: pathname === `/${params.storeId}/orders`,
     },
-    {
-      href: `/${params.storeId}/enquiries`,
-      label: "Enquiries",
-      active: pathname === `/${params.storeId}/enquiries`,
-    },
+    // {
+    //   href: `/${params.storeId}/enquiries`,
+    //   label: "Enquiries",
+    //   active: pathname === `/${params.storeId}/enquiries`,
+    // },
     {
       href: `/${params.storeId}/settings`,
       label: "Settings",

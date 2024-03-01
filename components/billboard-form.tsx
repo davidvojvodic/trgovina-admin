@@ -32,12 +32,19 @@ import AlertModal from "./modals/alert-modal";
 import { ApiAlert } from "./api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "./image-upload";
+import { Switch } from "./ui/switch";
 
 // Define the form schema for billboard data validation
 const formSchema = z.object({
+  name: z.string().min(1),
   label: z.string().optional(),
   imageUrl: z.string().min(1),
-  name: z.string().min(1),
+  tabletImageUrl: z.string().optional(),
+  mobileImageUrl: z.string().optional(),
+  isActive: z.boolean(),
+  displayOrder: z.number().optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
@@ -70,13 +77,18 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
   // Initialize react-hook-form with the form schema and initial values
   const form = useForm<BillboardFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: (initialData && {
-      ...initialData,
-      label: initialData.label ?? "",
-    }) || {
-      label: "",
-      imageUrl: "",
-      name: "",
+    defaultValues: {
+      label: initialData?.label ?? "",
+      imageUrl: initialData?.imageUrl ?? "",
+      name: initialData?.name ?? "",
+      isActive: initialData?.isActive ?? true, // Default to true for new billboards
+      displayOrder: initialData?.displayOrder ?? undefined, // No default value, it's optional
+      startDate: initialData?.startDate
+        ? new Date(initialData.startDate)
+        : undefined, // Convert to Date object or null
+      endDate: initialData?.endDate ? new Date(initialData.endDate) : undefined, // Convert to Date object or null
+      tabletImageUrl: initialData?.tabletImageUrl ?? "",
+      mobileImageUrl: initialData?.mobileImageUrl ?? "",
     },
   });
 
@@ -191,7 +203,22 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
               </FormItem>
             )}
           />
-           <div className="grid grid-cols-3 gap-8">
+          <FormField
+            control={form.control}
+            name="isActive"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Activen</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
               name="name"
@@ -230,7 +257,6 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
             />
           </div>
 
-         
           {/* Submit button */}
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
