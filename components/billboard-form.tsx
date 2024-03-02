@@ -11,14 +11,15 @@ import * as z from "zod";
 import { Billboard, Store } from "@prisma/client";
 import Heading from "./heading";
 import { Button } from "./ui/button";
-import { Trash } from "lucide-react";
+import { CalendarIcon, Trash } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,6 +34,11 @@ import { ApiAlert } from "./api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "./image-upload";
 import { Switch } from "./ui/switch";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Calendar } from "./ui/calendar";
+import { cn } from "@/lib/utils";
+import { addDays, format } from "date-fns";
+import { DateRange } from "react-day-picker";
 
 // Define the form schema for billboard data validation
 const formSchema = z.object({
@@ -81,12 +87,14 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       label: initialData?.label ?? "",
       imageUrl: initialData?.imageUrl ?? "",
       name: initialData?.name ?? "",
-      isActive: initialData?.isActive ?? true, // Default to true for new billboards
-      displayOrder: initialData?.displayOrder ?? undefined, // No default value, it's optional
+      isActive: initialData?.isActive ?? true,
+      displayOrder: initialData?.displayOrder
+        ? Number(initialData.displayOrder)
+        : undefined, // Convert to number
       startDate: initialData?.startDate
         ? new Date(initialData.startDate)
-        : undefined, // Convert to Date object or null
-      endDate: initialData?.endDate ? new Date(initialData.endDate) : undefined, // Convert to Date object or null
+        : undefined,
+      endDate: initialData?.endDate ? new Date(initialData.endDate) : undefined,
       tabletImageUrl: initialData?.tabletImageUrl ?? "",
       mobileImageUrl: initialData?.mobileImageUrl ?? "",
     },
@@ -182,42 +190,86 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full"
+          className="space-y-8 w-full flex flex-col"
         >
-          {/* Form field for uploading an image */}
+          <div className="flex flex-wrap flex-1 gap-4">
+            {/* Form field for uploading an image */}
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Background image</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value ? [field.value] : []}
+                      disabled={loading}
+                      onChange={(url) => field.onChange(url)}
+                      onRemove={() => field.onChange("")}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="tabletImageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tablet Background Image</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value ? [field.value] : []}
+                      disabled={loading}
+                      onChange={(url) => field.onChange(url)}
+                      onRemove={() => field.onChange("")}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="mobileImageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mobile Background Image</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value ? [field.value] : []}
+                      disabled={loading}
+                      onChange={(url) => field.onChange(url)}
+                      onRemove={() => field.onChange("")}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
-            name="imageUrl"
+            name="displayOrder"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Background image</FormLabel>
+                <FormLabel>Display Order</FormLabel>
                 <FormControl>
-                  <ImageUpload
-                    value={field.value ? [field.value] : []}
+                  <Input
+                    type="number"
+                    value={field.value}
+                    onChange={(e) => {
+                      const numberValue = parseInt(e.target.value, 10);
+                      field.onChange(isNaN(numberValue) ? "" : numberValue);
+                    }}
                     disabled={loading}
-                    onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange("")}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="isActive"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Activen</FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -236,9 +288,107 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="isActive"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Active</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-4 !mt-6">
+                      <p className="text-muted-foreground">No</p>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <p className="text-muted-foreground">Yes</p>
+                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
           {/* Grid for label input */}
           <div className="grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="startDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Start Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    Your start date of displaying this billboard.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="endDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>End Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className="w-[240px] pl-3 text-left font-normal"
+                        >
+                          {field.value ? (
+                            format(new Date(field.value), "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    Your end date of displaying this billboard.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="label"

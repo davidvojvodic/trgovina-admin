@@ -5,6 +5,7 @@ import { ImagePlus, Trash } from "lucide-react";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { CldUploadWidget } from "next-cloudinary";
+import { Card, CardContent } from "./ui/card";
 
 interface ImageUploadProps {
   disabled?: boolean;
@@ -38,30 +39,40 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       {/* Display uploaded images as thumbnails */}
       <div className="mb-4 flex items-center gap-4">
         {value.map((url) => (
-          <div
-            key={url}
-            className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
-          >
-            {/* Remove button for each image */}
-            <div className="z-10 absolute top-2 right-2">
-              <Button
-                type="button"
-                onClick={() => onRemove(url)}
-                variant="destructive"
-                size="icon"
+          <Card key={url}>
+            <CardContent className="flex items-center p-0">
+              <div
+                key={url}
+                className="relative w-[500px] h-[250px] flex items-center rounded-md overflow-hidden"
               >
-                <Trash className="w-4 h-4" />
-              </Button>
-            </div>
-            {/* Display the image */}
-            <Image fill className="object-cover" alt="Image" src={url} />
-          </div>
+                {/* Remove button for each image */}
+                <div className="z-10 absolute top-2 right-2">
+                  <Button
+                    type="button"
+                    onClick={() => onRemove(url)}
+                    variant="destructive"
+                    size="icon"
+                  >
+                    <Trash className="w-4 h-4" />
+                  </Button>
+                </div>
+                {/* Display the image */}
+                <Image
+                  fill
+                  className="object-contain my-auto"
+                  alt="Image"
+                  src={url}
+                />
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
+
       {/* Cloudinary upload widget */}
       <CldUploadWidget onUpload={onUpload} uploadPreset="vdou0v5y">
         {({ open }) => {

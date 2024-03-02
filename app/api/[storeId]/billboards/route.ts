@@ -13,7 +13,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         const body = await req.json();
 
         // Step 3: Extract the 'label' and 'imageUrl' properties from the request body
-        const { label, imageUrl, name } = body;
+        const { label, imageUrl, name, isActive, displayOrder, startDate, endDate, tabletImageUrl, mobileImageUrl } = body;
 
         // Step 4: Check if the user is not authenticated, and if so, return a 401 Unauthorized response
         if (!userId) {
@@ -54,6 +54,12 @@ export async function POST(req: Request, { params }: { params: { storeId: string
                 label,
                 imageUrl,
                 name,
+                isActive,
+                displayOrder,
+                startDate,
+                endDate,
+                tabletImageUrl,
+                mobileImageUrl,
                 storeId: params.storeId,
             },
         });
