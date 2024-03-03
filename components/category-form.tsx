@@ -23,7 +23,6 @@ import { useToast } from "./ui/use-toast";
 import { Separator } from "./ui/separator";
 import AlertModal from "./modals/alert-modal";
 import { useOrigin } from "@/hooks/use-origin";
-import ImageUpload from "./image-upload";
 import {
   Select,
   SelectContent,
@@ -38,8 +37,12 @@ import { useState } from "react";
 
 // Define the form schema using Zod
 const formSchema = z.object({
-  name: z.string().min(1), // Category name is a required string with a minimum length of 1 character
-  billboardId: z.string().optional(), // Billboard ID is a required string with a minimum length of 1 character
+  name: z.string().min(1),
+  description: z.string().optional(),
+  slug: z.string().min(1),
+  metaDescription: z.string().optional(),
+  parentId: z.string().optional(), // Assuming you have a way to select parent categories
+  billboardId: z.string().optional(),
 });
 
 // Define the type for category form values
@@ -234,12 +237,67 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                           value={billboard.id}
                           disabled={loading}
                         >
-                          {billboard.label}
+                          {billboard.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Category description" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="SEO-friendly URL slug" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="metaDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Meta Description</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="SEO meta description" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="parentId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Parent Category</FormLabel>
+                  {/* <Select {...field} placeholder="Select parent category">
+                    {parentCategories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </Select> */}
                 </FormItem>
               )}
             />
