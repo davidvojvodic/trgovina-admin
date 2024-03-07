@@ -47,11 +47,7 @@ const CategoryClient = ({ data }: CategoryClientProps) => {
         </Button>
       </div>
       <Separator /> {/* Render a separator */}
-      <DataTable
-        searchKey="name"
-        columns={categoriesColumns}
-        data={data}
-      />{" "}
+      <DataTable columns={categoriesColumns} data={data} />{" "}
       {/* Render DataTable to display category data */}
       <Heading title="API" description="API calls for categories" />{" "}
       {/* API heading */}

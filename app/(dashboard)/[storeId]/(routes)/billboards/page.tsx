@@ -30,6 +30,10 @@ const Billboards = async ({ params }: { params: { storeId: string } }) => {
     name: item.name,
     label: item.label,
     createdAt: format(item.createdAt, "MMMM do, yyyy"), // Format creation date
+    imageUrl: item.imageUrl,
+    isActive: item.isActive,
+    startDate: item.startDate ? format(item.startDate, "d MMMM yyyy") : '', // Format start date
+    endDate: item.endDate ? format(item.endDate, "d MMMM yyyy") : '', // Format end date
   }));
 
   return (

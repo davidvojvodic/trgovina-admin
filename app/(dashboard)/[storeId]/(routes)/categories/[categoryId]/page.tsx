@@ -23,6 +23,12 @@ const BillboardPage = async ({
     },
   });
 
+  const allCategories = await prismadb.category.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+  });
+
   // Query the database to fetch all billboards for the specified store
   const billboards = await prismadb.billboard.findMany({
     where: {
@@ -34,7 +40,7 @@ const BillboardPage = async ({
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         {/* Render the CategoryForm component with billboards and initial category data */}
-        <CategoryForm billboards={billboards} initialData={category} />
+        <CategoryForm billboards={billboards} initialData={category} allCategories={allCategories} />
       </div>
     </div>
   );

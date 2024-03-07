@@ -134,6 +134,7 @@ model Product {
 
 model Attribute {
   id        String   @id @default(uuid()) // Unique identifier for the attribute.
+  storeId   String
   productId String // ID of the associated product.
   product   Product  @relation(fields: [productId], references: [id]) // Relationship to the product.
   key       String // Attribute name, e.g., "Material", "Dimensions".

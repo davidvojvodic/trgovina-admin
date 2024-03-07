@@ -47,7 +47,7 @@ const BillboardClient = ({ data }: BillboardClientProps) => {
         </Button>
       </div>
       <Separator /> {/* Render a separator */}
-      <DataTable searchKey="label" columns={columns} data={data} />{" "}
+      <DataTable columns={columns} data={data} />{" "}
       {/* Render DataTable to display billboard data */}
       <Heading title="API" description="API calls for billboards" />{" "}
       {/* API heading */}

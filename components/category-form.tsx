@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,6 +35,7 @@ import { Billboard, Category } from "@prisma/client";
 import Heading from "./heading";
 import { Trash } from "lucide-react";
 import { useState } from "react";
+import { Textarea } from "./ui/textarea";
 
 // Define the form schema using Zod
 const formSchema = z.object({
@@ -52,13 +54,18 @@ type CategoryFormValues = z.infer<typeof formSchema>;
 interface CategoryFormProps {
   initialData: Category | null; // Initial category data (null for creating new category)
   billboards: Billboard[]; // List of available billboards for selection
+  allCategories: Category[]; // List of all categories in the store
 }
 
 /**
  * CategoryForm is a component that allows users to create or edit a category.
  * It displays a form with fields for entering the category's name and selecting a billboard.
  */
-const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
+const CategoryForm = ({
+  initialData,
+  billboards,
+  allCategories,
+}: CategoryFormProps) => {
   // Access the toast function, router, and origin
   const { toast } = useToast();
   const params = useParams();
@@ -84,8 +91,19 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
       ? {
           name: initialData.name,
           billboardId: initialData.billboardId ?? "",
+          slug: initialData.slug,
+          description: initialData.description as string,
+          metaDescription: (initialData.metaDescription as string) ?? null,
+          parentId: initialData.parentId as string,
         }
-      : { name: "", billboardId: "" },
+      : {
+          name: "",
+          billboardId: "",
+          slug: "",
+          description: "",
+          metaDescription: "",
+          parentId: "",
+        },
   });
 
   // Function to handle form submission
@@ -208,6 +226,22 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      {...field}
+                      placeholder="SEO-friendly URL slug"
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
             {/* Billboard selection field */}
             <FormField
               control={form.control}
@@ -253,21 +287,15 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Category description" />
+                    <Textarea
+                      placeholder="Category description"
+                      rows={10}
+                      className="resize-none"
+                      {...field}
+                    />
                   </FormControl>
-                </FormItem>
-              )}
-            />
 
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="SEO-friendly URL slug" />
-                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -279,28 +307,47 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                 <FormItem>
                   <FormLabel>Meta Description</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="SEO meta description" />
+                    <Textarea
+                      placeholder="Meta description"
+                      rows={10}
+                      className="resize-none"
+                      {...field}
+                    />
                   </FormControl>
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="parentId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Parent Category</FormLabel>
-                  {/* <Select {...field} placeholder="Select parent category">
-                    {parentCategories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </Select> */}
-                </FormItem>
-              )}
-            />
+            {allCategories && (
+              <FormField
+                control={form.control}
+                name="parentId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Parent Category</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select parent category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {allCategories
+                          .filter((cat) => cat.id !== initialData?.id)
+                          .map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+            )}
           </div>
           {/* Submit button */}
           <Button disabled={loading} className="ml-auto" type="submit">
