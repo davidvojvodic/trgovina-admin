@@ -54,7 +54,7 @@ const SizeClient = ({ data }: SizeClientProps) => {
       </div>
       <Separator />
       {/* Render a data table with size data */}
-      <DataTable searchKey="name" columns={columns} data={data} />
+      <DataTable columns={columns} data={data} />
       {/* Display a section heading for API calls */}
       <Heading title="API" description="API calls for sizes" />
       <Separator />

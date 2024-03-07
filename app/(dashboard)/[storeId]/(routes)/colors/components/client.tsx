@@ -43,7 +43,7 @@ const ColorsClient = ({ data }: ColorsClientProps) => {
       </div>
       <Separator />
       {/* Render a data table to display colors */}
-      <DataTable searchKey="name" columns={columns} data={data} />
+      <DataTable columns={columns} data={data} />
       {/* Render a heading for API information */}
       <Heading title="API" description="API calls for colors" />
       <Separator />

@@ -43,7 +43,7 @@ const ProductClient = ({ data }: ProductClientProps) => {
       </div>
       <Separator />
       {/* Display a data table for products */}
-      <DataTable searchKey="name" columns={columns} data={data} />
+      <DataTable columns={columns} data={data} />
       {/* Display a heading for the API section */}
       <Heading title="API" description="API calls for products" />
       <Separator />

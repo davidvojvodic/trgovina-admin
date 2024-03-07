@@ -19,7 +19,7 @@ const EnquiryClient = ({ data }: EnquiryClientProps) => {
       {/* Display a separator */}
       <Separator />
       {/* Render a DataTable to display order data */}
-      <DataTable searchKey="products" columns={columns} data={data} />
+      <DataTable columns={columns} data={data} />
     </>
   );
 };
