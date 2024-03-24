@@ -114,19 +114,20 @@ model Product {
   price         Decimal  @db.Decimal(10, 2) // Price of the product with precision and scale.
   stockQuantity Int // Inventory levels for the product.
 
-  isFeatured      Boolean     @default(false) // Flag indicating if the product is featured.
-  isArchived      Boolean     @default(false) // Flag indicating if the product is archived.
+  isFeatured      Boolean @default(false) // Flag indicating if the product is featured.
+  isArchived      Boolean @default(false) // Flag indicating if the product is archived.
   sizeId          String? // ID of the associated size, now optional.
-  size            Size?       @relation(fields: [sizeId], references: [id]) // Optional relationship to the size.
+  size            Size?   @relation(fields: [sizeId], references: [id]) // Optional relationship to the size.
   colorId         String? // ID of the associated color, now optional.
-  color           Color?      @relation(fields: [colorId], references: [id]) // Optional relationship to the color.
-  slug            String      @unique // SEO-friendly URL.
+  color           Color?  @relation(fields: [colorId], references: [id]) // Optional relationship to the color.
+  slug            String  @unique // SEO-friendly URL.
   metaDescription String // SEO meta description.
-  attributes      Attribute[] // Relationship to generic attributes.
-  images          Image[] // Relationship to product images.
-  orderItems      OrderItem[] // Relationship to order items.
-  createdAt       DateTime    @default(now()) // Timestamp for when the product was created.
-  updatedAt       DateTime    @updatedAt // Timestamp for when the product was last updated.
+
+  attributes Attribute[] // Relationship to generic attributes.
+  images     Image[] // Relationship to product images.
+  orderItems OrderItem[] // Relationship to order items.
+  createdAt  DateTime    @default(now()) // Timestamp for when the product was created.
+  updatedAt  DateTime    @updatedAt // Timestamp for when the product was last updated.
 
   @@index([storeId])
   @@index([categoryId])
@@ -135,8 +136,8 @@ model Product {
 model Attribute {
   id        String   @id @default(uuid()) // Unique identifier for the attribute.
   storeId   String
-  productId String // ID of the associated product.
-  product   Product  @relation(fields: [productId], references: [id]) // Relationship to the product.
+  productId String? // ID of the associated product.
+  product   Product? @relation(fields: [productId], references: [id]) // Relationship to the product.
   key       String // Attribute name, e.g., "Material", "Dimensions".
   value     String // Attribute value, e.g., "Cotton", "10x20x30cm".
   createdAt DateTime @default(now()) // Timestamp for when the attribute was created.

@@ -116,11 +116,11 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    defaultColumn: {
-      minSize: 30,
-      size: 100,
-      maxSize: 800,
-    },
+    // defaultColumn: {
+    //   minSize: 30,
+    //   size: 100,
+    //   maxSize: 800,
+    // },
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -174,7 +174,7 @@ export function DataTable<TData, TValue>({
   // Funkcija za pridobitev besedila za menu
   const getSelectionText = (count: number) => {
     if (count === 1) return "Row selected";
-    
+
     return "Rows selected";
   };
 
@@ -190,7 +190,6 @@ export function DataTable<TData, TValue>({
     }
     return colSizes;
   }, [table]);
-
 
   // Funkcija za ponastavitev filtrov
   const resetFilters = () => {
@@ -240,7 +239,6 @@ export function DataTable<TData, TValue>({
                   })}
               </DropdownMenuContent>
             </DropdownMenu>
-           
           </div>
         </div>
         <div className="rounded-md border">
@@ -278,8 +276,8 @@ export function DataTable<TData, TValue>({
                         onDragStart={onDragStart(header.id, false)}
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={onDrop(header.id)}
-                        className={`header relative ${
-                          draggingColumnId === header.id ? "border-2" : ""
+                        className={`header relative  ${
+                          draggingColumnId === header.id ? "border-2 " : ""
                         }`}
                       >
                         {header.isPlaceholder ? null : (
@@ -314,9 +312,7 @@ export function DataTable<TData, TValue>({
                                   asChild
                                   className="my-auto ml-2.5"
                                 >
-                                  
-                                    <SlidersHorizontalIcon className="h-4 w-4" />
-                                  
+                                  <SlidersHorizontalIcon className="h-4 w-4" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent
                                   side="right"
@@ -347,7 +343,7 @@ export function DataTable<TData, TValue>({
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
-                  className="h-[70px]"
+                    className="h-[70px]"
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                   >

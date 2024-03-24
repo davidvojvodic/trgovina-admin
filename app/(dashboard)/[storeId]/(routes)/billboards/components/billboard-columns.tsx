@@ -24,6 +24,8 @@ export type BillboardColumn = {
   label?: string | null;
   imageUrl?: string | null;
   isActive: boolean | null;
+  startDate?: Date | null | string;
+  endDate?: Date | null | string;
   createdAt: string;
 };
 
@@ -53,35 +55,8 @@ export const columns: ColumnDef<BillboardColumn>[] = [
     enableSorting: false,
     enableHiding: false,
     enableColumnFilter: false,
-    size: 20,
+    size: 30,
   },
-  // {
-  //   id: "ID",
-  //   accessorKey: "id",
-  //   enableSorting: true,
-  //   enableResizing: true,
-  //   enableGlobalFilter: true,
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         className="!p-0"
-  //         variant="ghost"
-  //         onClick={column.getToggleSortingHandler()}
-  //       >
-  //         ID
-  //         {column.getIsSorted() === false && (
-  //           <ArrowUpDown className="h-4 w-4 ml-2" />
-  //         )}
-  //         {column.getIsSorted() === "asc" && (
-  //           <ArrowUpWideNarrow className="h-4 w-4 ml-2" />
-  //         )}
-  //         {column.getIsSorted() === "desc" && (
-  //           <ArrowDownWideNarrow className="h-4 w-4 ml-2" />
-  //         )}
-  //       </Button>
-  //     );
-  //   },
-  // },
   {
     id: "Name",
     accessorKey: "name", // Key for accessing the name property
@@ -141,7 +116,15 @@ export const columns: ColumnDef<BillboardColumn>[] = [
     enableSorting: false,
     enableResizing: true,
     enableColumnFilter: false,
-    cell: ({ row }) => <>{row.getValue<boolean>("isActive") ? <Image src={"/checked.png"} alt="check" width={20} height={20} /> : <Image src={"/unchecked.png"} alt="check" width={20} height={20} />}</>,
+    cell: ({ row }) => (
+      <>
+        {row.getValue<boolean>("isActive") ? (
+          <Image src={"/checked.png"} alt="check" width={20} height={20} />
+        ) : (
+          <Image src={"/unchecked.png"} alt="check" width={20} height={20} />
+        )}
+      </>
+    ),
   },
   {
     id: "imageUrl",
@@ -152,10 +135,14 @@ export const columns: ColumnDef<BillboardColumn>[] = [
     enableColumnFilter: false,
     cell: ({ row }) => (
       <div>
-        <Image src={row.getValue<string>("imageUrl")} alt="image" width={65} height={65} />
+        <Image
+          src={row.getValue<string>("imageUrl")}
+          alt="image"
+          width={65}
+          height={65}
+        />
       </div>
     ),
-      
   },
   {
     id: "startDate",
@@ -205,7 +192,15 @@ export const columns: ColumnDef<BillboardColumn>[] = [
           )}
         </Button>
       );
-    }
+    },
+  },
+
+  {
+    id: "createdAt",
+    accessorKey: "createdAt", // Key for accessing the createdAt property
+    header: "Created",
+    enableSorting: true,
+    enableResizing: true,
   },
   {
     id: "actions", // Unique ID for the actions column
