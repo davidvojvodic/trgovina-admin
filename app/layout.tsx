@@ -8,6 +8,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ModalProvider } from "@/providers/modal-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Initialize the Inter font with a subset of "latin" characters
 const inter = Inter({ subsets: ["latin"] });
@@ -35,6 +37,8 @@ export default function RootLayout({
             {/* Apply the Inter font to the body */}
             <ModalProvider /> {/* Render the modal provider component */}
             {children} {/* Render the children components (page content) */}
+            <Analytics />
+            <SpeedInsights />
             <Toaster /> {/* Render the toaster component */}
           </ThemeProvider>
         </body>
