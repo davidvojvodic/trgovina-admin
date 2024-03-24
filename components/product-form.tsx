@@ -83,6 +83,8 @@ const ProductForm = ({
     defaultValues: initialData
       ? {
           ...initialData,
+          colorId: initialData.colorId ?? "",
+          sizeId: initialData.sizeId ?? "",
           price: parseFloat(String(initialData?.price)),
         }
       : {
