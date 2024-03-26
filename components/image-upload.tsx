@@ -39,7 +39,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-start">
       {/* Display uploaded images as thumbnails */}
       <div className="mb-4 flex items-center gap-4">
         {value.map((url) => (
@@ -73,27 +73,28 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         ))}
       </div>
 
-      {/* Cloudinary upload widget */}
-      <CldUploadWidget onUpload={onUpload} uploadPreset="vdou0v5y">
-        {({ open }) => {
-          const onClick = () => {
-            // Open the file dialog for image uploads
-            open();
-          };
+      {value.length === 0 && (
+        <CldUploadWidget onUpload={onUpload} uploadPreset="vdou0v5y">
+          {({ open }) => {
+            const onClick = () => {
+              // Open the file dialog for image uploads
+              open();
+            };
 
-          return (
-            <Button
-              type="button"
-              disabled={disabled}
-              variant="secondary"
-              onClick={onClick}
-            >
-              <ImagePlus className="h-4 w-4 mr-2" />
-              Upload photo
-            </Button>
-          );
-        }}
-      </CldUploadWidget>
+            return (
+              <Button
+                type="button"
+                disabled={disabled}
+                variant="secondary"
+                onClick={onClick}
+              >
+                <ImagePlus className="h-4 w-4 mr-2" />
+                Upload photo
+              </Button>
+            );
+          }}
+        </CldUploadWidget>
+      )}
     </div>
   );
 };
