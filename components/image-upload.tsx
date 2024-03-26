@@ -39,15 +39,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   }
 
   return (
-    <div className="flex flex-col items-start">
+    <div>
       {/* Display uploaded images as thumbnails */}
-      <div className="mb-4 flex items-center gap-4">
+      <div className="mb-4 gap-4">
         {value.map((url) => (
           <Card key={url}>
-            <CardContent className="flex items-center p-0">
+            <CardContent className="p-4">
               <div
                 key={url}
-                className="relative w-[500px] h-[250px] flex items-center rounded-md overflow-hidden"
+                className="relative w-full h-[250px] flex items-center rounded-md overflow-hidden"
               >
                 {/* Remove button for each image */}
                 <div className="z-10 absolute top-2 right-2">
