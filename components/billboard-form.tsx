@@ -11,7 +11,7 @@ import * as z from "zod";
 import { Billboard, Store } from "@prisma/client";
 import Heading from "./heading";
 import { Button } from "./ui/button";
-import { CalendarIcon, Trash } from "lucide-react";
+import { CalendarIcon, Plus, Save, Trash } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -85,7 +85,16 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
     ? "Edit existing billboard"
     : "Create a new billboard";
   const toastMessage = initialData ? "Billboard edited." : "Billboard created.";
-  const action = initialData ? "Save changes" : "Create";
+  const action = initialData ? (
+    <>
+      {" "}
+      <Save className="mr-2 w-4 h-4" /> Save changes
+    </>
+  ) : (
+    <>
+      <Plus className="mr-2 w-4 h-4" /> Create
+    </>
+  );
 
   // Initialize react-hook-form with the form schema and initial values
   const form = useForm<BillboardFormValues>({
@@ -184,10 +193,10 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           <Button
             disabled={loading}
             variant="destructive"
-            size="icon"
             onClick={() => setOpen(true)}
           >
-            <Trash className="h-4 w-4" />
+            <Trash className="h-4 w-4 mr-2" />
+            Delete billboard
           </Button>
         )}
       </div>
@@ -431,7 +440,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           </div>
 
           {/* Submit button */}
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={loading} className="w-full" type="submit">
             {action}
           </Button>
         </form>
