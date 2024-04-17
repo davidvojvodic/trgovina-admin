@@ -18,13 +18,21 @@ export async function POST(
     // Step 3: Extract various properties from the request body
     const {
       name,
+      description,
       price,
+      discountPrice,
+      discountPercent,
+      stockStatus,
+      stockQuantity,
+      isFeatured,
+      isArchived,
       categoryId,
       colorId,
       sizeId,
+      attributes,
+      slug,
+      metaDescription,
       images,
-      isFeatured,
-      isArchived,
     } = body;
 
     // Step 4: Check if the user is not authenticated, and if so, return a 401 Unauthorized response
@@ -52,22 +60,12 @@ export async function POST(
       return new NextResponse("Category ID is required", { status: 400 });
     }
 
-    // Step 9: Check if the 'sizeId' property is missing in the request body, and if so, return a 400 Bad Request response
-    if (!sizeId) {
-      return new NextResponse("Size ID is required", { status: 400 });
-    }
-
-    // Step 10: Check if the 'colorId' property is missing in the request body, and if so, return a 400 Bad Request response
-    if (!colorId) {
-      return new NextResponse("Color ID is required", { status: 400 });
-    }
-
-    // Step 11: Check if the 'storeId' parameter is missing in the request, and if so, return a 400 Bad Request response
+    // Step 9: Check if the 'storeId' parameter is missing in the request, and if so, return a 400 Bad Request response
     if (!params.storeId) {
       return new NextResponse("Store ID is required", { status: 400 });
     }
 
-    // Step 12: Find the store with the specified 'storeId' and 'userId' in the database using prismadb
+    // Step 10: Find the store with the specified 'storeId' and 'userId' in the database using prismadb
     const storeByUser = await prismadb.store.findFirst({
       where: {
         id: params.storeId,
@@ -75,7 +73,7 @@ export async function POST(
       },
     });
 
-    // Step 13: If the store is not found, return a 403 Forbidden response indicating that the user does not have access to the store
+    // Step 11: If the store is not found, return a 403 Forbidden response indicating that the user does not have access to the store
     if (!storeByUser) {
       return new NextResponse(
         `User ${userId} does not have access to this store`,
@@ -83,38 +81,45 @@ export async function POST(
       );
     }
 
-    // Step 14: Create a new product in the database with the specified properties and images
+    // Step 12: Create a new product in the database with the specified properties and images
     const product = await prismadb.product.create({
       data: {
         name,
+        description,
         price,
-        isFeatured,
-        isArchived,
+        discountPrice,
+        discountPercent,
+        stockStatus: stockStatus ?? true,
+        stockQuantity,
+        isFeatured: isFeatured ?? false,
+        isArchived: isArchived ?? false,
         categoryId,
         colorId,
         sizeId,
         storeId: params.storeId,
-        description: "",
-        stockQuantity: 0,
-        slug: "",
-        metaDescription: "",
+        slug,
+        metaDescription,
         images: {
           createMany: {
             data: [...images.map((image: { url: string }) => image)],
           },
         },
+        attributes: {
+          createMany: {
+            data: attributes,
+          },
+        },
       },
     });
 
-    // Step 15: Return a JSON response containing the created product
+    // Step 13: Return a JSON response containing the created product
     return NextResponse.json(product);
   } catch (error) {
-    // Step 16: Handle any errors that occur during the process and return a 500 Internal Server Error response
+    // Step 14: Handle any errors that occur during the process and return a 500 Internal Server Error response
     console.log("[PRODUCTS_POST]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
-
 // Define an asynchronous function called GET that handles HTTP GET requests for retrieving products
 export async function GET(
   req: Request,
@@ -148,6 +153,7 @@ export async function GET(
         category: true,
         color: true,
         size: true,
+        attributes: true,
       },
       orderBy: {
         createdAt: "desc",

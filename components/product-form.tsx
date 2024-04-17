@@ -34,17 +34,33 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
+import { Textarea } from "./ui/textarea";
+import { Switch } from "./ui/switch";
+import { FancyMultiSelect } from "./ui/multi-select";
 
 // Define a schema using Zod for form validation.
 const formSchema = z.object({
   name: z.string().min(1),
+  description: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
+  discountPrice: z.coerce.number().min(1).optional(),
+  discountPercent: z.coerce.number().min(0).max(100).optional(),
+  stockStatus: z.boolean().default(true),
+  stockQuantity: z.coerce.number().min(1).optional(),
   categoryId: z.string().min(1),
   colorId: z.string().min(1),
   sizeId: z.string().min(1),
+  attributes: z
+    .object({
+      key: z.string().min(1),
+      value: z.string().min(1),
+    })
+    .optional(),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
+  slug: z.string().min(1).optional(),
+  metaDescription: z.string().min(1).optional(),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -85,12 +101,16 @@ const ProductForm = ({
           ...initialData,
           colorId: initialData.colorId ?? "",
           sizeId: initialData.sizeId ?? "",
-          price: parseFloat(String(initialData?.price)),
+          price: initialData?.price,
         }
       : {
           name: "",
           images: [],
-          price: 0,
+          price: "",
+          discountPrice: "",
+          discountPercent: "",
+          stockStatus: true,
+          stockQuantity: "",
           categoryId: "",
           colorId: "",
           sizeId: "",
@@ -240,6 +260,24 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+            {/* Product description field */}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      disabled={loading}
+                      placeholder="Product description"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             {/* Product price field */}
             <FormField
               control={form.control}
@@ -259,40 +297,96 @@ const ProductForm = ({
                 </FormItem>
               )}
             />
+            {/* Product discount price field */}
+            <FormField
+              control={form.control}
+              name="discountPrice"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discount Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="7.99"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Product discount percent field */}
+            <FormField
+              control={form.control}
+              name="discountPercent"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Discount Percentage %</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="10"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Product stock field */}
+            <FormField
+              control={form.control}
+              name="stockStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock Status</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-4 !mt-6">
+                      <p className="text-muted-foreground">No</p>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <p className="text-muted-foreground">Yes</p>
+                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            {/* Product stock quantity */}
+            <FormField
+              control={form.control}
+              name="stockQuantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock Quantity</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      placeholder="10"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             {/* Product category field */}
             <FormField
               control={form.control}
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <Select
-                    disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Choose category"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {/* Select category options */}
-                      {categories.map((category) => (
-                        <SelectItem
-                          key={category.id}
-                          value={category.id}
-                          disabled={loading}
-                        >
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>Categories</FormLabel>
+                  <FancyMultiSelect
+                    placeholder="Select categories..."
+                    defaultValues={field.value}
+                    data={categories}
+                    {...field}
+                  />
                   <FormMessage />
                 </FormItem>
               )}

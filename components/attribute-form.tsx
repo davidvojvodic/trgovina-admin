@@ -18,7 +18,6 @@ import { Input } from "./ui/input";
 const formSchema = z.object({
   key: z.string().min(1),
   value: z.string().min(1),
-  product: z.string().min(1),
 });
 
 type AttributeFormValues = z.infer<typeof formSchema>;
@@ -46,7 +45,7 @@ const AttributeForm = ({ initialData }: AttributeFormProps) => {
 
   const form = useForm<AttributeFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || { key: "", value: "", product: "" },
+    defaultValues: initialData || { key: "", value: "" },
   });
 
   // Handle form submission
@@ -159,22 +158,6 @@ const AttributeForm = ({ initialData }: AttributeFormProps) => {
                   <FormLabel>Value</FormLabel>
                   <FormControl>
                     <Input {...field} disabled={loading} placeholder="Value" />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name={"product"}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={loading}
-                      placeholder="Product"
-                    />
                   </FormControl>
                 </FormItem>
               )}
