@@ -15,96 +15,83 @@ datasource db {
 
 // Define the "Store" table/model.
 model Store {
-  id         String      @id @default(uuid()) // Unique identifier for the store.
-  name       String // Name of the store.
-  userId     String // User ID associated with the store.
-  storeImage String?
-  billboards Billboard[] @relation("StoreToBillboard") // Relationship to billboards.
-  categories Category[]  @relation("StoreToCategory") // Relationship to categories.
-  sizes      Size[]      @relation("StoreToSize") // Relationship to sizes.
-  colors     Color[]     @relation("StoreToColor") // Relationship to colors.
-  products   Product[]   @relation("StoreToProduct") // Relationship to products.
-  orders     Order[]     @relation("StoreToOrder") // Relationship to orders.
-  // Enquiries  Enquiry[]   @relation("StoreToEnquiry")
-  createdAt  DateTime    @default(now()) // Timestamp for when the store was created.
-  updatedAt  DateTime    @updatedAt // Timestamp for when the store was last updated.
-  Attribute  Attribute[] @relation("StoreToAttribute")
+  id          String       @id @default(cuid()) // Unique identifier for the store.
+  name        String       // Name of the store.
+  userId      String       // User ID associated with the store.
+  storeImage  String?
+  billboards  Billboard[]  @relation("StoreToBillboard") // Relationship to billboards.
+  categories  Category[]  @relation("StoreToCategory") // Relationship to categories.
+  sizes       Size[]      @relation("StoreToSize") // Relationship to sizes.
+  colors      Color[]     @relation("StoreToColor") // Relationship to colors.
+  products    Product[]   @relation("StoreToProduct") // Relationship to products.
+  orders      Order[]     @relation("StoreToOrder") // Relationship to orders.
+  attributes  Attribute[] @relation("StoreToAttribute")
+  createdAt   DateTime    @default(now()) // Timestamp for when the store was created.
+  updatedAt   DateTime    @updatedAt // Timestamp for when the store was last updated.
 }
 
 // Define the "Billboard" table/model.
 model Billboard {
-  id             String     @id @default(uuid()) // Unique identifier for the billboard.
-  storeId        String // ID of the store associated with the billboard.
-  store          Store      @relation("StoreToBillboard", fields: [storeId], references: [id]) // Relationship to the store.
-  name           String // Name of the billboard.
-  label          String? // Label or name of the billboard.
-  isActive       Boolean    @default(true)
-  imageUrl       String // URL of the billboard image.
-  displayOrder   Int? // Nullable in case ordering is not always applicable
-  startDate      DateTime?
-  endDate        DateTime?
+  id          String      @id @default(cuid()) // Unique identifier for the billboard.
+  store       Store      @relation("StoreToBillboard", fields: [storeId], references: [id]) // Relationship to the store.
+  storeId     String     // ID of the store associated with the billboard.
+  name        String     // Name of the billboard.
+  label       String?
+  isActive    Boolean    @default(true)
+  imageUrl    String
+  displayOrder Int?
+  startDate   DateTime?
+  endDate     DateTime?
   tabletImageUrl String?
   mobileImageUrl String?
-  categories     Category[] // Relationship to categories.
-  createdAt      DateTime   @default(now()) // Timestamp for when the billboard was created.
-  updatedAt      DateTime   @updatedAt // Timestamp for when the billboard was last updated.
-
-  @@index([storeId])
+  categories  Category[] @relation(name: "BillboardToCategory") // Relationship to categories.
+  createdAt   DateTime   @default(now()) // Timestamp for when the billboard was created.
+  updatedAt   DateTime   @updatedAt // Timestamp for when the billboard was last updated.
 }
 
 // Define the "Category" table/model.
 model Category {
-  id              String     @id @default(uuid()) // Unique identifier for the category.
-  name            String // Name of the category.
-  description     String? // Detailed description of the category.
-  slug            String     @unique // SEO-friendly URL slug.
-  metaDescription String? // SEO meta description for the category.
-  parentId        String? // ID of the parent category for nested categorization, nullable for top-level categories.
-  parent          Category?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction) // Self-relation for parent category.
-  children        Category[] @relation("ParentChild") // Self-relation for child categories.
-  storeId         String // ID of the store associated with the category.
-  store           Store      @relation("StoreToCategory", fields: [storeId], references: [id]) // Relationship to the store.
-  billboardId     String? // Optional ID of the associated billboard.
-  billboard       Billboard? @relation(fields: [billboardId], references: [id]) // Optional relationship to the billboard.
-  products        Product[]  @relation("CategoryToProduct") // Relationship to products.
-  createdAt       DateTime   @default(now()) // Timestamp for when the category was created.
-  updatedAt       DateTime   @updatedAt // Timestamp for when the category was last updated.
-
-  @@index([storeId])
-  @@index([parentId])
-  @@index([billboardId])
+  id          String      @id @default(cuid()) // Unique identifier for the category.
+  name        String     // Name of the category.
+  description String?    // Detailed description of the category.
+  slug        String     @unique // SEO-friendly URL slug.
+  metaDescription String? // SEO meta description.
+  parent      Category?  @relation(name: "ParentChild", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Self-relation for parent category.
+  parentId    String?    // ID of the parent category for nested categorization, nullable for top-level categories.
+  children    Category[] @relation(name: "ParentChild") // Self-relation for child categories.
+  store       Store      @relation("StoreToCategory", fields: [storeId], references: [id]) // Relationship to the store.
+  billboards  Billboard[] @relation(name: "BillboardToCategory") // Relationship to billboards.
+  products    Product[]  @relation("CategoryToProduct") // Relationship to products.
+  createdAt   DateTime   @default(now()) // Timestamp for when the category was created.
+  updatedAt   DateTime   @updatedAt // Timestamp for when the category was last updated.
 }
 
 // Define the "Size" table/model.
 model Size {
-  id        String    @id @default(uuid()) // Unique identifier for the size.
-  storeId   String // ID of the store associated with the size.
-  store     Store     @relation("StoreToSize", fields: [storeId], references: [id]) // Relationship to the store.
-  name      String // Name of the size.
-  value     String // Value associated with the size.
+  id        String   @id @default(cuid()) // Unique identifier for the size.
+  store     Store    @relation("StoreToSize", fields: [storeId], references: [id]) // Relationship to the store.
+  storeId   String  // ID of the store associated with the size.
+  name      String  // Name of the size.
+  value     String  // Value associated with the size.
   products  Product[] // Relationship to products.
-  createdAt DateTime  @default(now()) // Timestamp for when the size was created.
-  updatedAt DateTime  @updatedAt // Timestamp for when the size was last updated.
-
-  @@index([storeId])
+  createdAt DateTime @default(now()) // Timestamp for when the size was created.
+  updatedAt DateTime @updatedAt // Timestamp for when the size was last updated.
 }
 
 // Define the "Color" table/model.
 model Color {
-  id        String    @id @default(uuid()) // Unique identifier for the color.
-  storeId   String // ID of the store associated with the color.
-  store     Store     @relation("StoreToColor", fields: [storeId], references: [id]) // Relationship to the store.
-  name      String // Name of the color.
-  value     String // Value associated with the color.
+  id        String   @id @default(cuid()) // Unique identifier for the color.
+  store     Store    @relation("StoreToColor", fields: [storeId], references: [id]) // Relationship to the store.
+  storeId   String  // ID of the store associated with the color.
+  name      String  // Name of the color.
+  value     String  // Value associated with the color.
   products  Product[] // Relationship to products.
-  createdAt DateTime  @default(now()) // Timestamp for when the color was created.
-  updatedAt DateTime  @updatedAt // Timestamp for when the color was last updated.
-
-  @@index([storeId])
+  createdAt DateTime @default(now()) // Timestamp for when the color was created.
+  updatedAt DateTime @updatedAt // Timestamp for when the color was last updated.
 }
 
 model Attribute {
-  id        String                 @id @default(uuid()) // Unique identifier for the attribute.
+  id        String                 @id @default(cuid()) // Unique identifier for the attribute.
   storeId   String
   store     Store                  @relation("StoreToAttribute", fields: [storeId], references: [id]) // Relationship to the store.
   key       String // Attribute name, e.g., "Material", "Dimensions".
@@ -112,13 +99,11 @@ model Attribute {
   products  AttributesOnProducts[] // Relationship to products.
   createdAt DateTime               @default(now()) // Timestamp for when the attribute was created.
   updatedAt DateTime               @updatedAt // Timestamp for when the attribute was last updated.
-
-  @@index([storeId])
 }
 
 // Define the "Product" table/model.
 model Product {
-  id              String                 @id @default(uuid()) // Unique identifier for the product.
+  id              String                 @id @default(cuid()) // Unique identifier for the product.
   storeId         String // ID of the store associated with the product.
   store           Store                  @relation("StoreToProduct", fields: [storeId], references: [id]) // Relationship to the store.
   categoryId      String // ID of the associated category.
@@ -143,26 +128,21 @@ model Product {
   orderItems      OrderItem[] // Relationship to order items.
   createdAt       DateTime               @default(now()) // Timestamp for when the product was created.
   updatedAt       DateTime               @updatedAt // Timestamp for when the product was last updated.
-
-  @@index([storeId])
-  @@index([categoryId])
 }
 
 model AttributesOnProducts {
-  id          String    @id @default(uuid()) // Unique identifier for the attribute.
+  id          String    @id @default(cuid()) // Unique identifier for the attribute.
   productId   String
   product     Product   @relation(fields: [productId], references: [id]) // Relationship to the product.
   attributeId String
   attribute   Attribute @relation(fields: [attributeId], references: [id]) // Relationship to the attribute.
   createdAt   DateTime  @default(now()) // Timestamp for when the attribute was created.
   updatedAt   DateTime  @updatedAt // Timestamp for when the attribute was last updated.
-
-  @@index([productId, attributeId])
 }
 
 // Define the "Image" table/model.
 model Image {
-  id           String   @id @default(uuid()) // Unique identifier for the image.
+  id           String   @id @default(cuid()) // Unique identifier for the image.
   productId    String // ID of the associated product.
   product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade) // Relationship to the product.
   url          String // URL of the image, could be used for the primary or high-resolution image.
@@ -173,50 +153,40 @@ model Image {
   order        Int? // Order in which the image should appear.
   createdAt    DateTime @default(now()) // Timestamp for when the image was created.
   updatedAt    DateTime @updatedAt // Timestamp for when the image was last updated.
-
-  @@index([productId])
 }
 
 // Define the "Order" table/model.
 model Order {
-  id         String      @id @default(uuid()) // Unique identifier for the order.
+  id         String      @id @default(cuid()) // Unique identifier for the order.
   storeId    String // ID of the store associated with the order.
   store      Store       @relation("StoreToOrder", fields: [storeId], references: [id]) // Relationship to the store.
   orderItems OrderItem[] // Relationship to order items.
   isPaid     Boolean     @default(false) // Flag indicating if the order is paid.
   phone      String      @default("") // Phone number associated with the order.
   address    String      @default("") // Address associated with the order.
-  status     String // Status of the order (e.g., processing, shipped, delivered).
+  status     OrderStatus // Status of the order (e.g., processing, shipped, delivered).
   total      Decimal     @default(0) // Total amount of the order.
   createdAt  DateTime    @default(now()) // Timestamp for when the order was created.
-
-  updatedAt DateTime @updatedAt // Timestamp for when the order was last updated.
-
-  @@index([storeId])
+  updatedAt  DateTime    @updatedAt // Timestamp for when the order was last updated.
 }
 
+// Define the "OrderItem" table/model.
 model OrderItem {
-  id        String  @id @default(uuid()) // Unique identifier for the order item.
+  id        String  @id @default(cuid()) // Unique identifier for the order item.
   orderId   String // ID of the associated order.
   order     Order   @relation(fields: [orderId], references: [id]) // Relationship to the order.
   productId String // ID of the associated product.
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade) // Relationship to the product.
   quantity  Int? // Quantity of the product ordered.
   unitPrice Decimal @default(0) // Price of the product per unit at the time of the order.
-
-  @@index([orderId])
-  @@index([productId])
+  createdAt DateTime @default(now()) // Timestamp for when the order item was created.
+  updatedAt DateTime @updatedAt // Timestamp for when the order item was last updated.
 }
 
-// model Enquiry {
-//   id        String   @id @default(uuid())
-//   storeId   String // ID of the store associated with the size.
-//   store     Store    @relation("StoreToEnquiry", fields: [storeId], references: [id]) // Relationship to the store.
-//   name      String
-//   email     String
-//   message   String
-//   createdAt DateTime @default(now()) // Timestamp for when the size was created.
-//   updatedAt DateTime @updatedAt // Timestamp for when the size was last updated.
-
-//   @@index([storeId])
-// }
+// Define the "OrderStatus" enum.
+enum OrderStatus {
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
