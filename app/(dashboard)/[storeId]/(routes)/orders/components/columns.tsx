@@ -12,6 +12,10 @@ export type OrderColumn = {
   totalPrice: string;
   products: string;
   createdAt: string;
+  paymentStatusImage: {
+    paid: string;
+    unpaid: string;
+  };
 };
 
 // Define the columns for the DataTable
@@ -33,8 +37,15 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "Total price", // Column header text
   },
   {
-    accessorKey: "isPaid", // Column accessor key for isPaid
+    accessorKey: "paymentStatusImage", // Column accessor key for payment status image
     header: "Paid", // Column header text
-    cell: ({ row }) => (row.original.isPaid ? <Image src="/checked.png" alt="check" width={20} height={20} /> : <Image src="/unchecked.png" alt="check" width={20} height={20} />),
+    cell: ({ row }) => (
+      <Image
+        src={row.original.isPaid ? row.original.paymentStatusImage.paid : row.original.paymentStatusImage.unpaid}
+        alt={row.original.isPaid ? "paid" : "unpaid"}
+        width={20}
+        height={20}
+      />
+    ),
   },
 ];
