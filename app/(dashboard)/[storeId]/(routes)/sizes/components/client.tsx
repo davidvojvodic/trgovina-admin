@@ -1,39 +1,38 @@
 "use client";
-/**
- * @file SizeClient.tsx
- * @description This component represents the client interface for managing sizes.
- * It displays a table of sizes, provides options to add a new size, and lists API calls for sizes.
- *
- * Functionality:
- * 1. Define the SizeClient component that displays a list of sizes.
- * 2. Display the total count of sizes and provide an option to add a new size.
- * 3. Render a table with size data and allow sorting by name.
- * 4. Include an API list for sizes.
- */
-
-// Import necessary modules and components
 import { Plus } from "lucide-react";
 import Heading from "../../../../../../components/heading";
 import { Button } from "../../../../../../components/ui/button";
 import { Separator } from "../../../../../../components/ui/separator";
 import { useParams, useRouter } from "next/navigation";
-
-import { columns } from "./columns";
+import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "../../../../../../components/data-table";
 import { ApiList } from "../../../../../../components/api-list";
-import { SizeColumn } from "./columns";
 
-/**
- * Props for the SizeClient component.
- */
+// Define the SizeColumn type for columns
+type SizeColumn = {
+  id: string;
+  name: string;
+  value: number;
+};
+
+// Define the columns
+const columns: ColumnDef<SizeColumn>[] = [
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "value",
+    header: "Value",
+  },
+];
+
+// Props for the SizeClient component
 interface SizeClientProps {
   data: SizeColumn[]; // An array of size data to display.
 }
 
-/**
- * SizeClient component
- * @param {SizeClientProps} props - The component's props.
- */
+// SizeClient component
 const SizeClient = ({ data }: SizeClientProps) => {
   const router = useRouter();
   const params = useParams();
@@ -47,7 +46,10 @@ const SizeClient = ({ data }: SizeClientProps) => {
           description="Manage sizes for your store"
         />
         {/* Render a button to add a new size */}
-        <Button onClick={() => router.push(`/${params.storeId}/sizes/new`)}>
+        <Button
+          onClick={() => router.push(`/${params.storeId}/sizes/new`)}
+          className="ml-auto"
+        >
           <Plus className="mr-2 w-4 h-4" />
           Create new
         </Button>
@@ -59,7 +61,7 @@ const SizeClient = ({ data }: SizeClientProps) => {
       <Heading title="API" description="API calls for sizes" />
       <Separator />
       {/* Include an API list for sizes */}
-      <ApiList entityName="sizes" entityIdName="sizeId" />
+      <ApiList entityName="sizes" entityIdName="id" />
     </>
   );
 };
