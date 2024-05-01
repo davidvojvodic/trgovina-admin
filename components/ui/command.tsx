@@ -2,34 +2,33 @@
 
 import * as React from "react"
 import { DialogProps } from "@radix-ui/react-dialog"
-import { Command as CommandPrimitive } from "cmdk"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "cmdk"
 import { Search } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 
-const Command = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive
-    ref={ref}
-    className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
-      className
-    )}
-    {...props}
-  />
-))
-Command.displayName = CommandPrimitive.displayName
+// Added type imports
+import type { ComponentPropsWithoutRef, ElementRef } from "react"
 
-interface CommandDialogProps extends DialogProps {}
+interface CustomCommandDialogProps extends DialogProps {}
 
-const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+const CustomCommandDialog = ({
+  children,
+  ...dialogProps
+}: CustomCommandDialogProps) => {
   return (
-    <Dialog {...props}>
+    <Dialog {...dialogProps}>
       <DialogContent className="overflow-hidden p-0 shadow-lg">
-        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+        <Command className="h-full w-full overflow-hidden rounded-md bg-popover text-popover-foreground">
           {children}
         </Command>
       </DialogContent>
@@ -37,94 +36,65 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   )
 }
 
-const CommandInput = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Input>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
+// Removed unnecessary forwardRef and displayName
+const CustomCommandInput = ({ className, ...inputProps }: ComponentPropsWithoutRef<typeof CommandInput>) => (
   <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
     <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-    <CommandPrimitive.Input
-      ref={ref}
+    <CommandInput
       className={cn(
         "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
-      {...props}
+      {...inputProps}
     />
   </div>
-))
+)
 
-CommandInput.displayName = CommandPrimitive.Input.displayName
-
-const CommandList = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.List
-    ref={ref}
+// Removed unnecessary forwardRef and displayName
+const CustomCommandList = ({ className, ...listProps }: ComponentPropsWithoutRef<typeof CommandList>) => (
+  <CommandList
     className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
-    {...props}
+    {...listProps}
   />
-))
+)
 
-CommandList.displayName = CommandPrimitive.List.displayName
-
-const CommandEmpty = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Empty>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->((props, ref) => (
-  <CommandPrimitive.Empty
-    ref={ref}
+// Removed unnecessary forwardRef and displayName
+const CustomCommandEmpty = ({ className, ...emptyProps }: ComponentPropsWithoutRef<typeof CommandEmpty>) => (
+  <CommandEmpty
     className="py-6 text-center text-sm"
-    {...props}
+    {...emptyProps}
   />
-))
+)
 
-CommandEmpty.displayName = CommandPrimitive.Empty.displayName
-
-const CommandGroup = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Group>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Group
-    ref={ref}
+// Removed unnecessary forwardRef and displayName
+const CustomCommandGroup = ({ className, ...groupProps }: ComponentPropsWithoutRef<typeof CommandGroup>) => (
+  <CommandGroup
     className={cn(
       "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
       className
     )}
-    {...props}
+    {...groupProps}
   />
-))
+)
 
-CommandGroup.displayName = CommandPrimitive.Group.displayName
-
-const CommandSeparator = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Separator>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Separator
-    ref={ref}
+// Removed unnecessary forwardRef and displayName
+const CustomCommandSeparator = ({ className, ...separatorProps }: ComponentPropsWithoutRef<typeof CommandSeparator>) => (
+  <CommandSeparator
     className={cn("-mx-1 h-px bg-border", className)}
-    {...props}
+    {...separatorProps}
   />
-))
-CommandSeparator.displayName = CommandPrimitive.Separator.displayName
+)
 
-const CommandItem = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Item
-    ref={ref}
+// Removed unnecessary forwardRef and displayName
+const CustomCommandItem = ({ className, ...itemProps }: ComponentPropsWithoutRef<typeof CommandItem>) => (
+  <CommandItem
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
-    {...props}
+    {...itemProps}
   />
-))
-
-CommandItem.displayName = CommandPrimitive.Item.displayName
+)
 
 const CommandShortcut = ({
   className,
@@ -143,13 +113,14 @@ const CommandShortcut = ({
 CommandShortcut.displayName = "CommandShortcut"
 
 export {
-  Command,
-  CommandDialog,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
+  CustomCommand,
+  CustomCommandDialog,
+  CustomCommandInput,
+  CustomCommandList,
+  CustomCommandEmpty,
+  CustomCommandGroup,
+  CustomCommandItem,
   CommandShortcut,
-  CommandSeparator,
+  CustomCommandSeparator,
 }
+
