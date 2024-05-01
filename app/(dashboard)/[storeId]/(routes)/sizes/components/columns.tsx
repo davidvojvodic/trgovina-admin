@@ -1,10 +1,5 @@
 "use client";
-/**
- * @file SizeColumns.tsx
- * @description This file defines the columns and column definitions for displaying sizes in a table.
- */
 
-// Import necessary modules and components
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 
@@ -15,7 +10,7 @@ export type SizeColumn = {
   id: string; // The unique identifier for the size.
   name: string; // The name of the size.
   value: string; // The value of the size.
-  createdAt: string; // The date when the size was created.
+  createdAt: Date; // The date when the size was created, as a JavaScript Date object.
 };
 
 /**
@@ -24,7 +19,7 @@ export type SizeColumn = {
 export const columns: ColumnDef<SizeColumn>[] = [
   {
     accessorKey: "name", // Define the accessor key for the name property.
-    header: "Name", // Set the column header text to "Ime".
+    header: "Name", // Set the column header text to "Name".
   },
   {
     accessorKey: "value", // Define the accessor key for the value property.
@@ -33,6 +28,7 @@ export const columns: ColumnDef<SizeColumn>[] = [
   {
     accessorKey: "createdAt", // Define the accessor key for the createdAt property.
     header: "Date", // Set the column header text to "Date".
+    cell: ({ getValue }) => new Intl.DateTimeFormat("en-US", { dateStyle: "short" }).format(getValue() as Date), // Format the date using the Intl object.
   },
   {
     id: "actions", // Define a unique identifier for the actions column.
@@ -40,3 +36,4 @@ export const columns: ColumnDef<SizeColumn>[] = [
     cell: ({ row }) => <CellAction data={row.original} />, // Render actions using the CellAction component.
   },
 ];
+
