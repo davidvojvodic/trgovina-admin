@@ -1,13 +1,29 @@
 import { authMiddleware } from "@clerk/nextjs";
- 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
+
+// This function checks if a user is authenticated or not
+export function checkAuth(req) {
+  return req.user !== null;
+}
+
+// This is an example of a protected route
+export async function POST(req, res) {
+  if (!checkAuth(req)) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  // Your protected route logic here
+}
+
+// This is an example of a public route
+export async function GET(req, res) {
+  // Your public route logic here
+}
+
 export default authMiddleware({
-    publicRoutes: ["/api/:path*"],
+  // Protect all routes except for the ones listed below
+  publicRoutes: ["/", "/about", "/contact", "/api/:path*"],
 });
- 
+
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)"],
 };
- 
