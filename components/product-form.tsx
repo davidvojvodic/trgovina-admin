@@ -1,11 +1,5 @@
 "use client";
 
-import * as z from "zod";
-import { Category, Color, Image, Product, Size } from "@prisma/client";
-import Heading from "./heading";
-import { Button } from "./ui/button";
-import { Trash } from "lucide-react";
-import { Separator } from "./ui/separator";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -19,6 +13,9 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Trash } from "lucide-react";
+import { Separator } from "./ui/separator";
 import { useToast } from "./ui/use-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
@@ -42,12 +39,16 @@ import { FancyMultiSelect } from "./ui/multi-select";
 const formSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
-  images: z.object({ url: z.string() }).array(),
-  price: z.coerce.number().min(1),
-  discountPrice: z.coerce.number().min(1).optional(),
-  discountPercent: z.coerce.number().min(0).max(100).optional(),
+  images: z.array(
+    z.object({
+      url: z.string(),
+    })
+  ),
+  price: z.number().min(1),
+  discountPrice: z.number().min(1).optional(),
+  discountPercent: z.number().min(0).max(100).optional(),
   stockStatus: z.boolean().default(true),
-  stockQuantity: z.coerce.number().min(1).optional(),
+  stockQuantity: z.number().min(1).optional(),
   categoryId: z.string().min(1),
   colorId: z.string().min(1),
   sizeId: z.string().min(1),
@@ -241,7 +242,7 @@ const ProductForm = ({
             )}
           />
           {/* Grid layout for other form fields */}
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 gap-4">
             {/* Product name field */}
             <FormField
               control={form.control}
