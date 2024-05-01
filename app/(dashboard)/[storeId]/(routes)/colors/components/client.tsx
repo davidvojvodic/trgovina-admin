@@ -1,42 +1,43 @@
 "use client"; // Notable import statement
-// Components and Actions:
-// 1. Import necessary modules and components
-// 2. Define the ColorsClient component
-//    - Takes data as a prop, representing color column data
-//    - Renders a page for managing colors with data table and actions
 
 // Import necessary modules and components
-
 import { Plus } from "lucide-react";
-import Heading from "../../../../../../components/heading";
-import { Button } from "../../../../../../components/ui/button";
-import { Separator } from "../../../../../../components/ui/separator";
+import Heading from "../../../../components/heading";
+import { Button } from "../../../../components/ui/button";
+import { Separator } from "../../../../components/ui/separator";
 import { useParams, useRouter } from "next/navigation";
+import { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "../../../../components/data-table";
+import { ApiList } from "../../../../components/api-list";
 
-import { columns } from "./columns";
-import { DataTable } from "../../../../../../components/data-table";
-import { ApiList } from "../../../../../../components/api-list";
-import { ColorColumn } from "./columns";
+// Define the ColorColumn type
+type ColorColumn = {
+  colorId: string;
+  name: string;
+  value: string;
+  version: string;
+};
 
-// Define the props interface for the ColorsClient component
-interface ColorsClientProps {
-  data: ColorColumn[];
-}
+// Define the columns for the DataTable
+const columns: ColumnDef<ColorColumn>[] = [
+  // Add your column definitions here
+];
 
 // Define the ColorsClient component
-const ColorsClient = ({ data }: ColorsClientProps) => {
+const ColorsClient = ({ data }: { data: ColorColumn[] }) => {
   const router = useRouter();
   const params = useParams();
+
   return (
     <>
       <div className="flex items-center justify-between">
         {/* Render a heading with the count of colors */}
-        <Heading
-          title={`Colors (${data.length})`}
-          description="Manage colors for your store"
-        />
+        <Heading title={`Colors (${data.length})`} description="Manage colors for your store" />
         {/* Render a button to add a new color */}
-        <Button onClick={() => router.push(`/${params.storeId}/colors/new`)}>
+        <Button
+          onClick={() => router.push(`/${params.storeId}/colors/new`)}
+          className="ml-auto"
+        >
           <Plus className="mr-2 w-4 h-4" />
           Create new
         </Button>
@@ -54,3 +55,4 @@ const ColorsClient = ({ data }: ColorsClientProps) => {
 };
 
 export default ColorsClient;
+
