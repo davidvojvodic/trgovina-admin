@@ -1,56 +1,34 @@
 "use client";
-/**
- * @file CellAction.tsx
- * @description This component represents the actions that can be performed on a size item in a table.
- * It provides options to edit, copy the ID, and delete a size item.
- *
- * Functionality:
- * 1. Define the CellAction component that displays actions for a size item.
- * 2. Use Lucide React icons for edit, copy, and delete actions.
- * 3. Handle copy action by copying the size ID to the clipboard.
- * 4. Handle delete action by sending a request to delete the size item.
- * 5. Display a confirmation modal before deleting the size item.
- */
-
-// Import necessary modules and components
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { Button } from "../../../../../../components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "../../../../../../components/ui/dropdown-menu";
-import { toast } from "../../../../../../components/ui/use-toast";
+} from "../../../../../components/ui/dropdown-menu";
+import { Button } from "../../../../../components/ui/button";
+import { toast } from "../../../../../components/ui/use-toast";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
-import AlertModal from "../../../../../../components/modals/alert-modal";
-import { SizeColumn } from "./columns";
+import AlertModal from "../../../../../components/modals/alert-modal";
 
-/**
- * Props for the CellAction component.
- */
-interface CellActionProps {
-  data: SizeColumn; // The size item data to perform actions on.
+interface SizeColumn {
+  id: string;
+  // Add other properties if necessary
 }
 
-/**
- * CellAction component
- * @param {CellActionProps} props - The component's props.
- */
+interface CellActionProps {
+  data: SizeColumn;
+}
+
 export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  /**
-   * Handles the copy action by copying the size ID to the clipboard.
-   * @param {string} id - The ID to be copied.
-   */
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast({
@@ -59,16 +37,11 @@ export const CellAction = ({ data }: CellActionProps) => {
     });
   };
 
-  /**
-   * Handles the delete action by sending a request to delete the size item.
-   */
   const onDelete = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       await axios.delete(`/api/${params.storeId}/sizes/${data.id}`);
-
       router.refresh();
-
       toast({
         title: "Success",
         description: "The size has been deleted.",
@@ -82,18 +55,18 @@ export const CellAction = ({ data }: CellActionProps) => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
-      setOpen(false);
+      setIsLoading(false);
+      setIsOpen(false);
     }
   };
 
   return (
     <>
       <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
         onConfirm={onDelete}
-        loading={loading}
+        isLoading={isLoading}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -114,7 +87,7 @@ export const CellAction = ({ data }: CellActionProps) => {
             <Copy className="w-4 h-4 mr-2" />
             Copy ID
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem onClick={() => setIsOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
             Delete
           </DropdownMenuItem>
