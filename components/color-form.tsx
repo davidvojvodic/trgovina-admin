@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * @file ColorForm.tsx
- * @description This file defines a form component for creating or editing colors.
- */
-
 import * as z from "zod";
 import { Color } from "@prisma/client";
 import Heading from "./heading";
@@ -29,7 +24,6 @@ import { useParams, useRouter } from "next/navigation";
 import AlertModal from "./modals/alert-modal";
 import { useOrigin } from "@/hooks/use-origin";
 
-// Define the form schema for ColorForm validation
 const formSchema = z.object({
   name: z.string().min(1),
   value: z.string().min(4).regex(/^#/, {
@@ -39,16 +33,17 @@ const formSchema = z.object({
 
 type ColorFormValues = z.infer<typeof formSchema>;
 
-// Define props for the ColorForm component
 interface ColorFormProps {
-  initialData: Color | null; // Initial color data for editing (null for creating)
+  initialData?: Color;
+  onSuccess?: () => void;
+  onDelete?: () => void;
 }
 
-/**
- * ColorForm is a form component for creating or editing colors.
- * It includes fields for color name and value and supports validation and submission.
- */
-const ColorForm = ({ initialData }: ColorFormProps) => {
+const ColorForm: React.FC<ColorFormProps> = ({
+  initialData,
+  onSuccess,
+  onDelete,
+}) => {
   const { toast } = useToast();
   const params = useParams();
   const router = useRouter();
@@ -57,42 +52,45 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Determine the title, description, toast message, and action based on whether it's for editing or creating a color
-  const title = initialData ? "Edit the color" : "Create color";
-  const description = initialData ? "Edit color changes" : "Add a new color";
-  const toastMessage = initialData ? "Color updated." : "Color created.";
-  const action = initialData ? "Save changes" : "Create";
+  const title = initialData ? "Edit Color" : "Create Color";
+  const description = initialData ? "Edit color details" : "Add a new color";
+  const action = initialData ? "Save Changes" : "Create";
 
-  // Initialize the form with react-hook-form
   const form = useForm<ColorFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || { name: "", value: "" },
   });
 
-  // Function to handle form submission
   const onSubmit = async (data: ColorFormValues) => {
     try {
       setLoading(true);
+
       if (initialData) {
-        await axios.patch(
-          `/api/${params.storeId}/colors/${params.colorId}`,
-          data
-        );
+        await axios.patch(`/api/${params.storeId}/colors/${params.colorId}`, data);
+        toast({
+          title: "Success",
+          description: "Color updated.",
+          variant: "default",
+        });
       } else {
         await axios.post(`/api/${params.storeId}/colors`, data);
+        toast({
+          title: "Success",
+          description: "Color created.",
+          variant: "default",
+        });
+      }
+
+      if (onSuccess) {
+        onSuccess();
       }
 
       router.refresh();
       router.push(`/${params.storeId}/colors`);
-      toast({
-        title: "Success",
-        description: toastMessage,
-        variant: "default",
-      });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Something went wrong",
+        description: "Something went wrong.",
         variant: "destructive",
       });
       console.log("[COLORS_FORM_ON_SUBMIT]", error);
@@ -101,20 +99,22 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
     }
   };
 
-  // Function to handle color deletion
-  const onDelete = async () => {
+  const onDeleteColor = async () => {
     try {
       setLoading(true);
       await axios.delete(`/api/${params.storeId}/colors/${params.colorId}`);
-
-      router.refresh();
-      router.push(`/${params.storeId}/colors`);
-
       toast({
         title: "Success",
         description: "Color deleted.",
         variant: "default",
       });
+
+      if (onDelete) {
+        onDelete();
+      }
+
+      router.refresh();
+      router.push(`/${params.storeId}/colors`);
     } catch (error) {
       toast({
         title: "Error",
@@ -128,13 +128,12 @@ const ColorForm = ({ initialData }: ColorFormProps) => {
     }
   };
 
-  // Render the ColorForm component
   return (
     <>
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onConfirm={onDelete}
+        onConfirm={onDeleteColor}
         loading={loading}
       />
       <div className="flex items-center justify-between">
