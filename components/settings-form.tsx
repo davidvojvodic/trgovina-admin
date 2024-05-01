@@ -44,19 +44,22 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
   const router = useRouter();
   const origin = useOrigin();
 
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initialize the form with React Hook Form and Zod resolver.
-  const form = useForm<SettingsFormValues>({
+  const formMethods = useForm<SettingsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData,
   });
 
+  const { handleSubmit, register, setValue, watch, formState } = formMethods;
+  const { errors } = formState;
+
   // Function to handle form submission.
   const onSubmit = async (data: SettingsFormValues) => {
     try {
-      setLoading(true);
+      setIsLoading(true);
 
       // Send a PATCH request to update store settings.
       await axios.patch(`/api/stores/${params.storeId}`, data);
@@ -79,14 +82,15 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
       });
       console.log("[SETTINGS_FORM_ON_SUBMIT]", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   // Function to handle store deletion.
-  const onDelete = async () => {
+  const handleDelete = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
+
       // Send a DELETE request to delete the store.
       await axios.delete(`/api/stores/${params.storeId}`);
 
@@ -108,8 +112,8 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
-      setOpen(false);
+      setIsLoading(false);
+      setIsOpen(false);
     }
   };
 
@@ -117,20 +121,20 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
     <>
       {/* Alert modal for confirming store deletion */}
       <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-        loading={loading}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onConfirm={handleDelete}
+        isLoading={isLoading}
       />
       <div className="flex items-center justify-between">
         {/* Heading for the settings form */}
         <Heading title="Settings" description="Manage store settings" />
         {/* Delete button for store */}
         <Button
-          disabled={loading}
+          disabled={isLoading}
           variant="destructive"
           size="icon"
-          onClick={() => setOpen(true)}
+          onClick={() => setIsOpen(true)}
         >
           <Trash className="h-4 w-4" />
         </Button>
@@ -138,53 +142,53 @@ const SettingsForm = ({ initialData }: SettingsFormProps) => {
       {/* Separator */}
       <Separator />
       {/* Settings form */}
-      <Form {...form}>
+      <Form {...formMethods}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
           className="space-y-8 w-full "
+          encType="multipart/form-data"
         >
           <div className="flex flex-col gap-8">
             {/* Store name field */}
             <FormField
-              control={form.control}
+              control={formMethods.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Store name</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={loading}
+                      disabled={isLoading}
                       placeholder="Store name"
-                      {...field}
+                      {...register("name")}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage error={errors.name?.message} />
                 </FormItem>
               )}
             />
-          
-              <FormField
-                control={form.control}
-                name="storeImage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Store Image</FormLabel>
-                    <FormControl>
-                      <ImageUpload
-                        value={field.value ? [field.value] : []}
-                        disabled={loading}
-                        onChange={(url) => field.onChange(url)}
-                        onRemove={() => field.onChange("")}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
+            <FormField
+              control={formMethods.control}
+              name="storeImage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Store Image</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value ? [field.value] : []}
+                      disabled={isLoading}
+                      onChange={(url) => setValue("storeImage", url)}
+                      onRemove={() => setValue("storeImage", "")}
+                    />
+                  </FormControl>
+                  <FormMessage error={errors.storeImage?.message} />
+                </FormItem>
+              )}
+            />
           </div>
           {/* Save changes button */}
-          <Button disabled={loading} className="ml-auto" type="submit">
+          <Button disabled={isLoading} className="ml-auto" type="submit">
             Save changes
           </Button>
         </form>
