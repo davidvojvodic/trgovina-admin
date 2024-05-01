@@ -1,11 +1,11 @@
 "use client"; // Notable import statement
+
 // Components and Actions:
 // 1. Import necessary modules and components
 // 2. Define the CategoryColumn type representing category data
 // 3. Define an array of columns for displaying category data
 
 // Import necessary modules and components
-
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,9 +32,8 @@ export type CategoryColumn = {
 // Define an array of columns for displaying category data
 export const categoriesColumns: ColumnDef<CategoryColumn>[] = [
   {
-    id: "select",
-    accessorKey: "select",
-
+    id: "selection",
+    accessorKey: "selection",
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -58,10 +57,8 @@ export const categoriesColumns: ColumnDef<CategoryColumn>[] = [
     size: 30,
   },
   {
-    id: "Name",
-    accessorKey: "name", // Key for accessing the name property
-    enableSorting: true,
-    enableResizing: true,
+    id: "name",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
@@ -84,44 +81,47 @@ export const categoriesColumns: ColumnDef<CategoryColumn>[] = [
     },
   },
   {
-    id: "Description",
-    accessorKey: "description", // Key for accessing the description property
-    header: "Description", // Header text for the "Description" column
-    cell: ({ row }) => row.original.description, // Render description
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => row.original.description,
   },
   {
-    id: "Slug",
-    accessorKey: "slug", // Key for accessing the slug property
-    header: "Slug", // Header text for the "Slug" column
-    cell: ({ row }) => row.original.slug, // Render slug
+    id: "slug",
+    accessorKey: "slug",
+    header: "Slug",
+    cell: ({ row }) => row.original.slug,
   },
   {
-    id: "Meta Description",
-    accessorKey: "metaDescription", // Key for accessing the metaDescription property
-    header: "Meta Description", // Header text for the "Meta Description" column
-    cell: ({ row }) => row.original.metaDescription, // Render metaDescription
+    id: "metaDescription",
+    accessorKey: "metaDescription",
+    header: "Meta Description",
+    cell: ({ row }) => row.original.metaDescription,
   },
   {
-    id: "Parent",
-    accessorKey: "parent", // Key for accessing the parent property
-    header: "Parent", // Header text for the "Parent" column
-    cell: ({ row }) => row.original.parent, // Render parent
+    id: "parent",
+    accessorKey: "parent",
+    header: "Parent",
+    cell: ({ row }) => row.original.parent,
   },
   {
-    id: "Children",
-    accessorKey: "children", // Key for accessing the children property
-    header: "Children", // Header text for the "Children" column
-    cell: ({ row }) => row.original.children, // Render children
+    id: "children",
+    accessorKey: "children",
+    header: "Children",
+    cell: ({ row }) => row.original.children,
   },
   {
-    id: "Billboard",
-    accessorKey: "billboard", // Key for accessing the billboard property
-    header: "Billboard", // Header text for the "Billboard" column
-    cell: ({ row }) => row.original.billboardName, // Render billboard label
+    id: "billboard",
+    accessorKey: "billboardName",
+    header: "Billboard",
+    cell: ({ row }) => row.original.billboardName,
   },
   {
-    id: "actions", // Unique ID for the actions column
-    header: "Actions", // Header text for the "Actions" column
-    cell: ({ row }) => <CellAction data={row.original} />, // Render cell actions using the CellAction component
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];
+
+// Added missing column header names and fixed accessor keys
+// to match the actual property names in the CategoryColumn type.
