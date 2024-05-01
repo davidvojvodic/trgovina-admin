@@ -30,16 +30,21 @@ export default function RootLayout({
     // Wrap the content with ClerkProvider for user authentication
     <ClerkProvider>
       <html lang="en">
-        {" "}
         {/* Specify the language of the HTML document */}
         <body className={inter.className}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+          >
             {/* Apply the Inter font to the body */}
             <ModalProvider /> {/* Render the modal provider component */}
-            {children} {/* Render the children components (page content) */}
+            <main className="min-h-screen bg-background"> {/* Add a main tag with a class name for better styling */}
+              {children} {/* Render the children components (page content) */}
+            </main>
+            <Toaster position="bottom-center" /> {/* Render the toaster component with a specified position */}
             <Analytics />
             <SpeedInsights />
-            <Toaster /> {/* Render the toaster component */}
           </ThemeProvider>
         </body>
       </html>
