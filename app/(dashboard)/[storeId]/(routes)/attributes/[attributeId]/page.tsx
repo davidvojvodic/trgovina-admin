@@ -1,17 +1,26 @@
 import AttributeForm from "@/components/attribute-form";
 import prismadb from "@/lib/prismadb";
+import { notFound } from "next/navigation";
 import React from "react";
 
-const AttributePage = async ({
+interface AttributePageProps {
+  params: {
+    attributeId: string;
+  };
+}
+
+const AttributePage: React.FC<AttributePageProps> = async ({
   params,
-}: {
-  params: { attributeId: string };
 }) => {
   const attribute = await prismadb.attribute.findUnique({
     where: {
       id: params.attributeId,
     },
   });
+
+  if (!attribute) {
+    notFound();
+  }
 
   return (
     <div className="flex-col">
