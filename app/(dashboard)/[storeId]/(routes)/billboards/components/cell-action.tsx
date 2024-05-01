@@ -1,4 +1,5 @@
 "use client"; // Notable import statement
+
 // Components and Actions:
 // 1. Import necessary modules and components
 // 2. Define the CellAction component
@@ -6,7 +7,6 @@
 //    - Renders a dropdown menu with actions for each billboard
 
 // Import necessary modules and components
-
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { BillboardColumn } from "./billboard-columns";
 import { Button } from "../../../../../../components/ui/button";
@@ -33,8 +33,8 @@ export const CellAction = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
 
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Function to copy the billboard ID to the clipboard
   const onCopy = (id: string) => {
@@ -48,7 +48,7 @@ export const CellAction = ({ data }: CellActionProps) => {
   // Function to delete a billboard
   const onDelete = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
 
       router.refresh();
@@ -66,8 +66,8 @@ export const CellAction = ({ data }: CellActionProps) => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
-      setOpen(false);
+      setIsLoading(false);
+      setIsOpen(false);
     }
   };
 
@@ -75,10 +75,10 @@ export const CellAction = ({ data }: CellActionProps) => {
     <>
       {/* Render an alert modal for confirming the delete action */}
       <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
         onConfirm={onDelete}
-        loading={loading}
+        isLoading={isLoading}
       />
       {/* Render a dropdown menu with actions for the billboard */}
       <DropdownMenu>
@@ -105,7 +105,7 @@ export const CellAction = ({ data }: CellActionProps) => {
             Copy ID
           </DropdownMenuItem>
           {/* Option to delete the billboard */}
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem onClick={() => setIsOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
             Delete
           </DropdownMenuItem>
