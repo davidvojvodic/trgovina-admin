@@ -16,6 +16,16 @@ const AttributeClient = ({ data }: AttributeClientProps) => {
   const router = useRouter();
   const params = useParams();
 
+  // Check if data is not null or undefined
+  if (!data) {
+    return <div>No data</div>;
+  }
+
+  // Check if attributeColumns is not null or undefined
+  if (!attributeColumns) {
+    return <div>No attribute columns</div>;
+  }
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -31,9 +41,10 @@ const AttributeClient = ({ data }: AttributeClientProps) => {
         </Button>
       </div>
       <Separator />
-      <DataTable columns={attributeColumns} data={data} />
+      <DataTable columns={attributeColumns as typeof attributeColumns} data={data} />
     </>
   );
 };
 
 export default AttributeClient;
+
