@@ -33,16 +33,16 @@ const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
   });
 
   // Format the products data for display
-  const formattedProducts: ProductColumn[] = products.map((item) => ({
-    id: item.id,
-    name: item.name,
-    isFeatured: item.isFeatured,
-    isArchived: item.isArchived,
-    price: formatter.format(item.price.toNumber()),
-    category: item.category.name,
-    size: item.size?.name ?? "",
-    color: item.color?.value ?? "",
-    createdAt: format(item.createdAt, "MMMM do, yyyy"),
+  const formattedProducts = products.map((product) => ({
+    id: product.id,
+    name: product.name,
+    isFeatured: product.isFeatured,
+    isArchived: product.isArchived,
+    price: formatter.format(product.price.toNumber()),
+    category: product.category.name,
+    size: product.size?.name || "N/A",
+    color: product.color?.value || "N/A",
+    createdAt: format(product.createdAt, "MMMM do, yyyy"),
   }));
 
   // Return the JSX content to render
