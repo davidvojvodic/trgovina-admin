@@ -8,15 +8,15 @@ export async function POST(
   { params }: { params: { storeId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const user = auth();
+
+    if (!user) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
     const body = await req.json();
 
     const { key, value } = body;
-
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
 
     if (!key) {
       return new NextResponse("Key is required", { status: 400 });
@@ -34,7 +34,7 @@ export async function POST(
     const storeByUser = await prismadb.store.findFirst({
       where: {
         id: params.storeId,
-        userId,
+        userId: user.id,
       },
     });
 
@@ -103,9 +103,10 @@ export async function DELETE(
       },
     });
 
-    return new Response("Attributes deleted successfully");
+    return new Response("Attributes deleted successfully", { status: 200 });
   } catch (error) {
     console.log("[ATTRIBUTE_DELETE]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
+
