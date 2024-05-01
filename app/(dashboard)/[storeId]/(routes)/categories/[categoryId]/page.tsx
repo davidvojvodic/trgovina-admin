@@ -2,45 +2,41 @@
 // 1. Import necessary modules and components
 // 2. Define the BillboardPage component
 //    - Takes params as a prop, including the categoryId and storeId
-//    - Queries the database to fetch a specific category by ID
-//    - Queries the database to fetch all billboards for the specified store
+//    - Fetches category, billboards, and all categories using Suspense and SWR
 //    - Renders a page to display a CategoryForm with initial data
 
-// Import necessary modules and components
 import CategoryForm from "@/components/category-form";
+import useSWR from "swr";
 import prismadb from "@/lib/prismadb";
+import { Category, Billboard } from "@prisma/client";
 
-// Define the BillboardPage component
-const BillboardPage = async ({
-  params,
-}: {
-  params: { categoryId: string; storeId: string };
-}) => {
-  // Query the database to fetch a specific category by its ID
-  const category = await prismadb.category.findUnique({
-    where: {
-      id: params.categoryId,
-    },
-  });
+const fetcher = async (url: string) => {
+  return prismadb. $kys.run(url);
+};
 
-  const allCategories = await prismadb.category.findMany({
-    where: {
-      storeId: params.storeId,
-    },
-  });
+const BillboardPage = ({ params }: { params: { categoryId: string; storeId: string } }) => {
+  const { data: category } = useSWR<Category | null>(
+    params?.categoryId ? `/category/findUnique?where={"id":"${params.categoryId}"}` : null,
+    fetcher
+  );
 
-  // Query the database to fetch all billboards for the specified store
-  const billboards = await prismadb.billboard.findMany({
-    where: {
-      storeId: params.storeId,
-    },
-  });
+  const { data: billboards } = useSWR<Billboard[]>(
+    params?.storeId ? `/billboard/findMany?where={"storeId":"${params.storeId}"}` : null,
+    fetcher
+  );
+
+  const { data: allCategories } = useSWR<Category[]>(
+    params?.storeId ? `/category/findMany?where={"storeId":"${params.storeId}"}` : null,
+    fetcher
+  );
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         {/* Render the CategoryForm component with billboards and initial category data */}
-        <CategoryForm billboards={billboards} initialData={category} allCategories={allCategories} />
+        {category && billboards && allCategories && (
+          <CategoryForm billboards={billboards} initialData={category} allCategories={allCategories} />
+        )}
       </div>
     </div>
   );
