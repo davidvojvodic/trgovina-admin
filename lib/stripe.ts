@@ -1,130 +1,95 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+// Interfaces
+interface CreateCheckoutParams {
+  priceId: string;
+  mode: "payment" | "subscription";
+  successUrl: string;
+  cancelUrl: string;
+  couponId?: string | null;
+  clientReferenceId?: string;
+  user?: {
+    customerId?: string;
+    email?: string;
+  };
+}
+
+interface CreateCustomerPortalParams {
+  customerId: string;
+  returnUrl: string;
+}
+
+// Variables
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-08-16",
   typescript: true,
 });
 
-// interface CreateCheckoutParams {
-//   priceId: string;
-//   mode: "payment" | "subscription";
-//   successUrl: string;
-//   cancelUrl: string;
-//   couponId?: string | null;
-//   clientReferenceId?: string;
-//   user?: {
-//     customerId?: string;
-//     email?: string;
-//   };
-// }
+// Functions
+export const createCheckout = async (params: CreateCheckoutParams): Promise<{ url: string; checkoutSessionId: string } | null> => {
+  try {
+    const extraParams: Stripe.Checkout.SessionCreateParams = {};
 
-// interface CreateCustomerPortalParams {
-//   customerId: string;
-//   returnUrl: string;
-// }
+    if (params.user?.customerId) {
+      extraParams.customer = params.user.customerId;
+    } else {
+      if (params.mode === "payment") {
+        extraParams.customer_creation = "always";
+        extraParams.payment_intent_data = { setup_future_usage: "on_session" };
+      }
+      if (params.user?.email) {
+        extraParams.customer_email = params.user.email;
+      }
+      extraParams.tax_id_collection = { enabled: true };
+    }
 
-// // This is used to create a Stripe Checkout for one-time payments. It's usually triggered with the <ButtonCheckout /> component. Webhooks are used to update the user's state in the database.
-// export const createCheckout = async ({
-//   user,
-//   mode,
-//   clientReferenceId,
-//   successUrl,
-//   cancelUrl,
-//   priceId,
-//   couponId,
-// }: CreateCheckoutParams): Promise<string | null> => {
-//   try {
-//     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-//       apiVersion: "2023-08-16", // TODO: update this when Stripe updates their API
-//       typescript: true,
-//     });
+    const checkoutSession = await stripe.checkout.sessions.create({
+      mode: params.mode,
+      allow_promotion_codes: true,
+      client_reference_id: params.clientReferenceId,
+      line_items: [
+        {
+          price: params.priceId,
+          quantity: 1,
+        },
+      ],
+      discounts: params.couponId
+        ? [
+            {
+              coupon: params.couponId,
+            },
+          ]
+        : [],
+      success_url: params.successUrl,
+      cancel_url: params.cancelUrl,
+      ...extraParams,
+    });
 
-//     const extraParams: {
-//       customer?: string;
-//       customer_creation?: "always";
-//       customer_email?: string;
-//       invoice_creation?: { enabled: boolean };
-//       payment_intent_data?: { setup_future_usage: "on_session" };
-//       tax_id_collection?: { enabled: boolean };
-//     } = {};
+    return { url: checkoutSession.url, checkoutSessionId: checkoutSession.id };
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
 
-//     if (user?.customerId) {
-//       extraParams.customer = user.customerId;
-//     } else {
-//       if (mode === "payment") {
-//         extraParams.customer_creation = "always";
-//         // The option below costs 0.4% (up to $2) per invoice. Alternatively, you can use https://zenvoice.io/ to create unlimited invoices automatically.
-//         // extraParams.invoice_creation = { enabled: true };
-//         extraParams.payment_intent_data = { setup_future_usage: "on_session" };
-//       }
-//       if (user?.email) {
-//         extraParams.customer_email = user.email;
-//       }
-//       extraParams.tax_id_collection = { enabled: true };
-//     }
+export const createCustomerPortal = async (params: CreateCustomerPortalParams): Promise<string> => {
+  const portalSession = await stripe.billingPortal.sessions.create({
+    customer: params.customerId,
+    return_url: params.returnUrl,
+  });
 
-//     const stripeSession = await stripe.checkout.sessions.create({
-//       mode,
-//       allow_promotion_codes: true,
-//       client_reference_id: clientReferenceId,
-//       line_items: [
-//         {
-//           price: priceId,
-//           quantity: 1,
-//         },
-//       ],
-//       discounts: couponId
-//         ? [
-//             {
-//               coupon: couponId,
-//             },
-//           ]
-//         : [],
-//       success_url: successUrl,
-//       cancel_url: cancelUrl,
-//       ...extraParams,
-//     });
+  return portalSession.url;
+};
 
-//     return stripeSession.url;
-//   } catch (e) {
-//     console.error(e);
-//     return null;
-//   }
-// };
+export const findCheckoutSession = async (sessionId: string): Promise<Stripe.Checkout.Session | null> => {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["line_items"],
+    });
 
-// // This is used to create Customer Portal sessions, so users can manage their subscriptions (payment methods, cancel, etc..)
-// export const createCustomerPortal = async ({
-//   customerId,
-//   returnUrl,
-// }: CreateCustomerPortalParams): Promise<string> => {
-//   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-//     apiVersion: "2023-08-16", // TODO: update this when Stripe updates their API
-//     typescript: true,
-//   });
-
-//   const portalSession = await stripe.billingPortal.sessions.create({
-//     customer: customerId,
-//     return_url: returnUrl,
-//   });
-
-//   return portalSession.url;
-// };
-
-// // This is used to get the uesr checkout session and populate the data so we get the planId the user subscribed to
-// export const findCheckoutSession = async (sessionId: string) => {
-//   try {
-//     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-//       apiVersion: "2023-08-16", // TODO: update this when Stripe updates their API
-//       typescript: true,
-//     });
-
-//     const session = await stripe.checkout.sessions.retrieve(sessionId, {
-//       expand: ["line_items"],
-//     });
-
-//     return session;
-//   } catch (e) {
-//     console.error(e);
-//     return null;
-//   }
-// };
+    return session || {};
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
