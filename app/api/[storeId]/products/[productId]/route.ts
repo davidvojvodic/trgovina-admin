@@ -3,16 +3,42 @@ import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
+// Define a helper function to check for required fields
+const isFieldRequired = (field: string, value: any) => {
+  if (!value) {
+    throw new NextResponse(`${field} is required`, { status: 400 });
+  }
+};
+
+// Define a helper function to check user access to the store
+const checkUserStoreAccess = async (userId: string, storeId: string) => {
+  const storeByUser = await prismadb.store.findFirst({
+    where: {
+      id: storeId,
+      userId,
+    },
+  });
+
+  if (!storeByUser) {
+    throw new NextResponse(`User ${userId} does not have access to this store`, {
+      status: 403,
+    });
+  }
+};
+
+// Define a helper function to handle errors
+const handleError = (error: any) => {
+  console.log("[PRODUCT]", error);
+  throw new NextResponse("Internal error", { status: 500 });
+};
+
 // Define a GET function to retrieve product details
 export async function GET(
   req: Request,
   { params }: { params: { productId: string } }
 ) {
   try {
-    // Check if productId is provided
-    if (!params.productId) {
-      return new NextResponse("Product id is required", { status: 400 });
-    }
+    isFieldRequired("productId", params.productId);
 
     // Fetch product details including related data (images, category, color, size)
     const product = await prismadb.product.findUnique({
@@ -31,10 +57,7 @@ export async function GET(
     // Respond with the product data in JSON format
     return NextResponse.json(product);
   } catch (error) {
-    // Handle errors and log them
-    console.log("[PRODUCT_GET]", error);
-    // Respond with an internal server error status and message
-    return new NextResponse("Internal error", { status: 500 });
+    return handleError(error);
   }
 }
 
@@ -44,11 +67,11 @@ export async function PATCH(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
-    // Authenticate the user and extract the request body
     const { userId } = auth();
+    isFieldRequired("userId", userId);
+
     const body = await req.json();
 
-    // Destructure relevant data from the request body
     const {
       name,
       description,
@@ -68,46 +91,14 @@ export async function PATCH(
       metaDescription,
     } = body;
 
-    // Check if the user is authenticated
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    isFieldRequired("name", name);
+    isFieldRequired("images", images);
+    isFieldRequired("images.url", images.url);
+    isFieldRequired("price", price);
+    isFieldRequired("categoryId", categoryId);
+    isFieldRequired("productId", params.productId);
 
-    // Check if required fields are provided
-    if (!name) {
-      return new NextResponse("Name is required", { status: 400 });
-    }
-
-    if (!images || !images.length) {
-      return new NextResponse("Images are required", { status: 400 });
-    }
-
-    if (!price) {
-      return new NextResponse("Price is required", { status: 400 });
-    }
-
-    if (!categoryId) {
-      return new NextResponse("Category ID is required", { status: 400 });
-    }
-
-    if (!params.productId) {
-      return new NextResponse("Store id is required", { status: 400 });
-    }
-
-    // Check if the user has access to the store
-    const storeByUser = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
-
-    if (!storeByUser) {
-      return new NextResponse(
-        `User ${userId} does not have access to this store`,
-        { status: 403 }
-      );
-    }
+    await checkUserStoreAccess(userId, params.storeId);
 
     // Update product details, including images
     await prismadb.product.update({
@@ -152,10 +143,7 @@ export async function PATCH(
     // Respond with the updated product data in JSON format
     return NextResponse.json(product);
   } catch (error) {
-    // Handle errors and log them
-    console.log("[PRODUCT_PATCH]", error);
-    // Respond with an internal server error status and message
-    return new NextResponse("Internal error", { status: 500 });
+    return handleError(error);
   }
 }
 
@@ -165,33 +153,11 @@ export async function DELETE(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
-    // Authenticate the user
     const { userId } = auth();
+    isFieldRequired("userId", userId);
+    isFieldRequired("productId", params.productId);
 
-    // Check if the user is authenticated
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    // Check if productId is provided
-    if (!params.productId) {
-      return new NextResponse("Product id is required", { status: 400 });
-    }
-
-    // Check if the user has access to the store
-    const storeByUser = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
-
-    if (!storeByUser) {
-      return new NextResponse(
-        `User ${userId} does not have access to this store`,
-        { status: 403 }
-      );
-    }
+    await checkUserStoreAccess(userId, params.storeId);
 
     // Delete the product
     const product = await prismadb.product.deleteMany({
@@ -203,9 +169,6 @@ export async function DELETE(
     // Respond with a success message in JSON format
     return NextResponse.json(product);
   } catch (error) {
-    // Handle errors and log them
-    console.log("[PRODUCT_DELETE]", error);
-    // Respond with an internal server error status and message
-    return new NextResponse("Internal error", { status: 500 });
+    return handleError(error);
   }
 }
