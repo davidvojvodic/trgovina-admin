@@ -2,25 +2,36 @@
 // 1. Import necessary modules and components
 // 2. Define the BillboardPage component
 //    - Takes params as a prop, including the billboardId
-//    - Queries the database to fetch a specific billboard by ID
+//    - Fetches a specific billboard by ID using SWR
 //    - Renders a page to display a BillboardForm with initial data
+//    - Handles errors and fallback UI
 
 // Import necessary modules and components
+import useSWR from "swr";
 import BillboardForm from "@/components/billboard-form";
 import prismadb from "@/lib/prismadb";
 
 // Define the BillboardPage component
-const BillboardPage = async ({
+const BillboardPage = ({
   params,
 }: {
   params: { billboardId: string };
 }) => {
-  // Query the database to fetch a specific billboard by its ID
-  const billboard = await prismadb.billboard.findUnique({
-    where: {
-      id: params.billboardId,
-    },
-  });
+  // Fetch a specific billboard by ID using SWR
+  const { data: billboard, error, isLoading } = useSWR(
+    `/api/billboards/${params.billboardId}`,
+    async () => {
+      return await prismadb.billboard.findUnique({
+        where: {
+          id: params.billboardId,
+        },
+      });
+    }
+  );
+
+  // Handle errors and fallback UI
+  if (error) return <div>Error loading billboard...</div>;
+  if (isLoading) return <div>Loading billboard...</div>;
 
   return (
     <div className="flex-col">
