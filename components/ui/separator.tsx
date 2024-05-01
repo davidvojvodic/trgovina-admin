@@ -1,31 +1,50 @@
 "use client"
 
-import * as React from "react"
-import * as SeparatorPrimitive from "@radix-ui/react-separator"
+import React, { forwardRef } from "react"
+import {
+  SeparatorProps as SeparatorPrimitiveProps,
+  separatorClassName,
+} from "@radix-ui/react-separator"
+import { cn } from "@/lib/utils/css"
 
-import { cn } from "@/lib/utils"
+type SeparatorProps = Omit<SeparatorPrimitiveProps, "className"> & {
+  className?: string
+  orientation?: "horizontal" | "vertical"
+  decorative?: boolean
+  defaultChecked?: boolean
+  disabled?: boolean
+}
 
-const Separator = React.forwardRef<
+const Separator = forwardRef<
   React.ElementRef<typeof SeparatorPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
->(
-  (
-    { className, orientation = "horizontal", decorative = true, ...props },
-    ref
-  ) => (
+  SeparatorProps
+>((props, ref) => {
+  const {
+    className,
+    orientation = "horizontal",
+    decorative = true,
+    defaultChecked,
+    disabled,
+    ...separatorProps
+  } = props
+
+  return (
     <SeparatorPrimitive.Root
       ref={ref}
+      defaultChecked={defaultChecked}
+      disabled={disabled}
       decorative={decorative}
       orientation={orientation}
       className={cn(
-        "shrink-0 bg-border",
+        separatorClassName,
         orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
         className
       )}
-      {...props}
+      {...separatorProps}
     />
   )
-)
+})
+
 Separator.displayName = SeparatorPrimitive.Root.displayName
 
 export { Separator }
